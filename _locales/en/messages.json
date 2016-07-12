@@ -1,0 +1,122 @@
+{
+	"description": {
+		"message": "Fast balance viewer for your affiliate networks and partner programms"
+	},
+	"name": {
+		"message": "Affiliate checker"
+	},
+	"site": {
+		"message": "Site"
+	},
+	"add_site_sitename": {
+		"message": "Add site: $sitename$",
+		"placeholders": {
+			"sitename": {
+				"content": "$1"
+			}
+		}
+	},
+	"login": {
+		"message": "Login"
+	},
+	"today": {
+		"message": "Today"
+	},
+	"yesterday": {
+		"message": "Yesterday"
+	},
+	"month": {
+		"message": "Month"
+	},
+	"predic": {
+		"message": "Predic."
+	},
+	"balance": {
+		"message": "Balance"
+	},
+	"intotal": {
+		"message": "In total"
+	},
+	"sites": {
+		"message": "Sites"
+	},
+	"add_site": {
+		"message": "Add site"
+	},
+	"settings": {
+		"message": "Settings"
+	},
+	"search_site": {
+		"description": "lower case",
+		"message": "search site"
+	},
+	"register": {
+		"message": "Sign up"
+	},
+	"site_description": {
+		"message": "Description:"
+	},
+	"about": {
+		"message": "About extension"
+	},
+	"not_conv": {
+		"message": "Not convert"
+	},
+	"to_RUR": {
+		"message": "Into RUR"
+	},
+	"to_USD": {
+		"message": "Into USD"
+	},
+	"change_maspas": {
+		"message": "Change master password"
+	},
+	"conv_currency": {
+		"message": "Convert to a common currency"
+	},
+	"hide_login": {
+		"message": "Hide login column"
+	},
+	"hide_predic": {
+		"message": "Hide predic. column"
+	},
+	"apply": {
+		"message": "Apply"
+	},
+	"no_account": {
+		"message": "Have no account?"
+	},
+	"remove_site": {
+		"message": "Remove site"
+	},
+	"none": {
+		"message": "None"
+	},
+	"sitedescr_loveplanet": {
+		"message": "Affiliate programm of dating site loveplanet.ru. Payment to WebMoney and a Yandex.Money. Minimal - 300 RUR. Referral system."
+	},
+	"sitedescr_cpazilla": {
+		"message": "Affiliate program of dating site fotostrana.ru. Pay per registration, from 1 to 75 RUR depending on age and gender. Payment to WebMoney and ePayments. Minimal - 300 RUR. Referral system available."
+	},
+	"sitedescr_seriouspartner": {
+		"message": "Affiliate site contain collection of paid site on different themes: love, movies, products, adult, wapclick and other. High partners deductions: from 75% of revenue. Payments on the Webmoney (Z, R), PayPal, Paxum. Referral system available."
+	},
+	"sitedescr_mylove": {
+		"message": "Affiliate program dating site mylove.ru. Pay 50%-70% of users payments. Payments in RUR to WebMoney or Qiwi wallets. Referral program available."
+	},
+	"sitedescr_bongacash": {
+		"message": "Erotic video chat, pay up to $$3 per free registration. Payments to WebMoney, Paxum, Payoneer. Referral program available."
+	},
+	"sitedescr_trafficshop": {
+		"message": "Popular Exchange buying and selling adult traffic. It works with payment systems: Epassporte, credit card, wire transfer, PayPal and WebMoney."
+	},
+	"sitedescr_halileo": {
+		"message": "File affiliate program. Paying up to $$25 for 1000 downloads. Registering bonus - $$5. Minimal payout -$$15. Pay to WebMoney and ePayments. Referral program available."
+	},
+	"sitedescr_adsense": {
+		"message": "Most popular contextual advertising program. Payout to wire transfer or sending a check."
+	},
+	"rate_extension": {
+		"message": "Rate extension"
+	}
+}

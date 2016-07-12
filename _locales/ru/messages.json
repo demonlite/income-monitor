@@ -1,0 +1,121 @@
+{
+	"description": {
+		"message": "Проверка баланса ваших партнерских программ"
+	},
+	"name": {
+		"message": "Affiliate checker"
+	},
+	"add_site_sitename": {
+		"message": "Добавить сайт: $sitename$",
+		"placeholders": {
+			"sitename": {
+				"content": "$1"
+			}
+		}
+	},
+	"site": {
+		"message": "Сайт"
+	},
+	"login": {
+		"message": "Логин"
+	},
+	"today": {
+		"message": "Сегодня"
+	},
+	"yesterday": {
+		"message": "Вчера"
+	},
+	"month": {
+		"message": "Месяц"
+	},
+	"predic": {
+		"message": "Прогноз"
+	},
+	"balance": {
+		"message": "Баланс"
+	},
+	"intotal": {
+		"message": "Итого"
+	},
+	"add_site": {
+		"message": "Добавить сайт"
+	},
+	"sites": {
+		"message": "Сайты"
+	},
+	"settings": {
+		"message": "Настройки"
+	},
+	"search_site": {
+		"message": "искать сайт"
+	},
+	"register": {
+		"message": "Регистрация"
+	},
+	"site_description": {
+		"message": "Описание:"
+	},
+	"about": {
+		"message": "O расширении"
+	},
+	"not_conv": {
+		"message": "Не конвертировать"
+	},
+	"to_RUR": {
+		"message": "В RUR"
+	},
+	"to_USD": {
+		"message": "В USD"
+	},
+	"change_maspas": {
+		"message": "Сменить мастер пароль"
+	},
+	"conv_currency": {
+		"message": "Конвертировать к единой валюте"
+	},
+	"hide_login": {
+		"message": "Скрыть столбец \"Логин\""
+	},
+	"hide_predic": {
+		"message": "Скрыть столбец \"Прогноз\""
+	},
+	"apply": {
+		"message": "Применить"
+	},
+	"no_account": {
+		"message": "Нет аккаунта?"
+	},
+	"remove_site": {
+		"message": "Удалить сайт"
+	},
+	"none": {
+		"message": "Отсутствует"
+	},
+	"sitedescr_loveplanet": {
+		"message": "Партнерская программа сайта знакомств loveplanet.ru. Выплаты на WebMoney и Yandex.Деньги. Минималка - 300 RUR. Есть реферальная система."
+	},
+	"sitedescr_cpazilla": {
+		"message": "Партнерская программа сайта знакомств fotostrana.ru. Платят за регистрацию, от 1 до 75 RUR в зависимости от возраста и пола. Выплаты на WebMoney и ePayments. Минималка - 300 RUR. Есть реферальная система."
+	},
+	"sitedescr_seriouspartner": {
+		"message": "SMS платники на разные тематики: знакомства, фильмы, товары, взрослый контент, wapclick и др. Высокие отчисления партнерам: от 75% от дохода. Выплаты на Webmoney (Z,R), PayPal, Paxum. Есть реферальная программа."
+	},
+	"sitedescr_mylove": {
+		"message": "Партнерская программа сайта знакомств mylove.ru. Платят 50%-70% от платежей пользователей. Выплаты в RUR на кошельки WebMoney и Qiwi. Есть реферальная программа."
+	},
+	"sitedescr_bongacash": {
+		"message": "Эротический видеочат с оплатой до 3$$ за бесплатную регистрацию. Выплаты на WebMoney, Paxum, Payoneer. Есть реферальная программа."
+	},
+	"sitedescr_trafficshop": {
+		"message": "Популярная биржа купли-продажи адалт трафика. Работает с платежными системами: Epassporte, кредитные карты, банковский перевод, PayPal и WebMoney."
+	},
+	"sitedescr_halileo": {
+		"message": "Файловая партнерка с оплатой в 25$$ за 1000 скачек из России (другие страны - дешевле). При регистрации бонус - 5$$. Минималка -15$$. Платят на WebMoney и ePayments. Есть реферальная программа."
+	},
+	"sitedescr_adsense": {
+		"message": "Наиболее популярная сеть контекстной рекламы. Вывод средств через банковсикий перевод или отсылку чека."
+	},
+	"rate_extension": {
+		"message": "Оценить расширение"
+	}
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+<meta http-equiv="content-type" content="text/html" charset="UTF-8"> 
+<head>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <link rel="stylesheet" type="text/css" href="assets/darktooltip/darktooltip.css">
+	<script src="jquery.js"></script>
+    <script src="assets/darktooltip/jquery.darktooltip.js"></script>
+    <script src="popup.js"></script>
+    <script src="engine/loveplanet.ru.js"></script>
+    <script src="engine/cpazilla.ru.js"></script>
+    <script src="engine/trafficshop.com.js"></script>
+    <script src="engine/halileo.com.js"></script>
+    <script src="engine/bongacash.com.js"></script>
+    <script src="engine/mylove.ru.js"></script>
+    <script src="engine/seriouspartner.biz.js"></script>
+    <script src="engine/adsense.js"></script>
+</head>
+<body>
+	
+
+	
+
+	
+	<div id="page">
+		<table id="sitetable">
+			<thead>
+				<th data-lang="site">Site</th>
+				<th class="login" data-lang="login">Login</th>
+				<th class="stud" data-lang="today">Today</th>
+				<th class="stud" data-lang="yesterday">Yesterday</th>
+				<th class="stud" data-lang="month">Month</th>
+				<th class="stud" data-lang="predic">Predic.</th>
+				<th class="stud" data-lang="balance">Balance</th>
+				<!--th>Options</th-->
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td class="login"></td>
+					<td data-role="today"></td>
+					<td data-role="yesterday"></td>
+					<td data-role="month"></td>
+					<td data-role="predic"></td>
+					<td data-role="balance"></td>
+				</tr>
+			</tfoot>
+		</table>
+		
+		<div class="opt-panel">
+			<a href="#" id="addbutton" data-lang="sites">Sites</a>
+			<a href="#" id="setbutton" data-lang="settings">Settings</a>
+			<!--a href="#" id="abotbutton" data-lang="about">About</a-->
+		</div>
+	</div>
+	
+	<div id="add">
+		<div id="add_menu">
+			<a href="#" class="back" id="back_add_menu">&lArr;</a>
+			<h2 data-lang="add_site">Add site</h2>
+			
+			<div class="serach-wrap">
+				<input class="search-field reqfield" id="filterdites" type="text" placeholder="search site" value="" />
+			</div>
+			
+
+			<div class="wrap50">
+				<h2 data-lang="add_site">Add site</h2>
+				<div class="sitelist">
+				</div>
+			</div>
+			
+			<div class="wrap50">
+				<h2 data-lang="remove_site">Remove site</h2>
+				<div class="dellist">
+				</div>
+			</div>
+			
+		</div>
+		
+		<div id="add_site">
+			<a href="#" class="back" id="back_add_site">&lArr;</a>
+			<h2>Dummi</h2>
+			<div class="frm">
+				<input class="logpas reqfield" type="text" id="sitelogin" placeholder="Login" value="" />
+				<input class="logpas reqfield" type="password" id="sitepass" placeholder="Password" value="" />
+				<input type="button" class="button apply-reqiz" value="Apply" />
+				<p class="mline">
+					<span data-lang="no_account">No account?</span> <a href="#" class="gotosite" data-lang="register" target="_blank">Sign up</a>
+				</p>
+				
+			</div>
+			<div>
+				<span class="descr-title" data-lang="site_description">Description:</span>
+				<p id="sitedescr"></p>
+			</div>
+
+		</div>
+	</div>
+	
+	<div id="settings">
+		<a href="#" class="back" id="back_settings">&lArr;</a>
+		<h2 data-lang="settings">Settings</h2>
+		
+		<div class="panwrap">
+			<!--input class="reqfield" type="password" placeholder="Master password" value="" /><label data-lang="change_maspas">Change master password</label><br /-->
+			<label data-lang="conv_currency">Convert to a common currency</label><br />
+			<select name="convcurrency" class="reqfield" id="convcurrency">
+				<option value="noconv" data-lang="not_conv">not convert</option>
+				<option value="toRUR" data-lang="to_RUR">To RUR</option>
+				<option value="toUSD" data-lang="to_USD">To USD</option>
+			</select><br />
+			<input type="checkbox" id="hide_login" name="hide_login" value="" /><label for="hide_login" data-lang="hide_login">Hide login column</label><br />
+			<input type="checkbox" id="hide_predic" name="hide_predic" value="" /><label for="hide_predic" data-lang="hide_predic">Hide predic. column</label><br />
+		</div>
+	</div>
+
+	
+	<div id="about">
+		<a href="#" class="back" id="back_about">&lArr;</a>
+		<h2 data-lang="about">About extension</h2>
+		
+		<span class="extname">Income Monitor<span class="ver"></span></span>
+		
+		<ul class="links">
+			<li><a href="#" data-lang="rate_extension" id="store_url">Rate extension</a></li>
+		</ul>
+		
+	</div>
+	
+</body>
+</html>

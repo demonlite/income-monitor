@@ -1,0 +1,364 @@
+@font-face {
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: 400;
+    src: url(assets/ubuntu-regular-webfont.woff) format('woff');
+}
+
+body {
+	font-family: ubuntu, helvetica;
+	font-size: 14px;
+	color: rgb(90, 90, 90);
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.12);
+	background-color: rgb(243, 250, 255);
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.24), rgba(0, 0, 0, 0.08));
+	-webkit-font-smoothing: antialiased;
+}
+
+
+
+
+h2 {
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0 0 5px 0;
+}
+
+p.mline {
+	margin: 6px 0 0 0;
+}
+
+a {
+    text-decoration: none;
+    color: #0041d2;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+.clr {
+	clear: both;
+	width: 100%;
+	height: 0;
+}
+table {
+  max-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+    font-weight: normal;
+    color: #039;
+    border-bottom: 2px solid #6678b1;
+    padding: 10px 8px;
+    min-width: 60px;
+    font-size: 0.9em;
+}
+
+tfoot tr td {
+	text-shadow: 1px 0px 0px rgb(0, 0, 0), 1px 1px 1px rgba(0, 0, 0, 0.28);
+	color: #3a3a3a;
+	border-top: 2px solid #6678b1;
+	padding: 10px 8px;
+	vertical-align: top;
+}
+
+td {
+    color: #505052;
+    padding: 7px 8px;
+    transition: .3s linear;
+	white-space: nowrap;
+	min-width: 68px;
+}
+
+td[data-role], .total {
+	font-family: ubuntu, 'consolas', sans-serif;
+}
+
+td.site {
+	white-space: nowrap;
+	min-width: 129px;
+}
+
+td.login {
+    color: #8c8c8c;
+    font-size: 0.8em;
+}
+
+td a {
+	color: #3c5984;
+}
+tr:hover td {
+    /* color: #6699ff; */
+    background-color: #c4dbf3;
+}
+
+
+.stud {
+	width: 13%;
+}
+
+.opt-panel {
+    text-align: right;
+    padding: 0px 0px;
+    margin-top: 3px;
+}
+
+.opt-panel a {
+    color: #4c67b3;
+    text-decoration: none;
+	margin-left: 10px;
+	font-size: 0.90em;
+}
+
+.opt-panel a:hover {
+    color: #0036ce;
+    text-decoration: underline;
+}
+
+
+
+#add, #add_site, #settings, #about {
+	display : none;
+}
+
+/* #add */ 
+h2 {
+    margin: 0 0 9px 0px;
+    font-size: 1.2em;
+    font-weight: normal;
+    display: inline-block;
+}
+
+.serach-wrap {
+    float: right;
+}
+
+
+.reqfield {
+    padding: 2px 3px 3px;
+    font-size: 1.05em;
+    color: rgb(49, 49, 49);
+    background-color: rgb(255, 255, 255);
+    width: 184px;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0.24), rgba(0, 0, 0, 0.08));
+    border: 1px solid #8e8e8e;
+    border-radius: 3px;
+    box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.16);
+}
+
+.sitelist {
+    padding: 5px;
+    max-height: 500px;
+}
+
+.cat-wrap {
+    margin: 0 0 8px 0;
+}
+span.category {
+	background-color: #6b6b6b;
+	padding: 1px 7px 4px 5px;
+	border-radius: 3px;
+	color: #efefef;
+	margin: 1px 11px 0px 3px;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.08));
+	text-shadow: -1px 0px 0 #000;
+	float: right;
+	font: bold 11px/11px verdana;
+}
+
+
+.line {
+	margin: 4px 0 4px 0;
+	height: 18px;
+	padding: 2px 3px;
+	transition: .3s linear;
+	cursor: default;
+}
+
+.line:hover {
+	background-color: #c4dbf3;
+	border-radius: 3px;
+}
+
+.frm {
+	margin: 8px 0 10px 0;
+	padding: 8px 7px;
+	background-color: #cfe2d9;
+	border-radius: 3px;
+}
+
+.line img {
+	vertical-align: top;
+	margin: 1px 0px 0px 0;
+}
+
+.slowbg {
+	transition: background-color 0.8s ease-in-out;
+}
+
+a.back {
+	font-size: 22px;
+	text-decoration: none;
+	font-weight: bold;
+	line-height: 23px;
+	font-family: monospace;
+	/* border: 1px solid #4186c1; */
+	width: 25px;
+	display: inline-block;
+	height: 21px;
+	vertical-align: text-bottom;
+	margin: 1px 5px -2px 3px;
+	border-radius: 4px;
+	padding: 0 0 0 5px;
+	color: white;
+	background-color: #4987bb;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
+	transition: 0.2s ease-in-out all;
+}
+
+a.back:hover {
+    text-decoration: none;
+    background-color: #5697ce;
+}
+
+span.descr-title {
+    font-weight: bold;
+    color: #4c4c4c;
+}
+
+
+.logpas.reqfield {
+    margin: 0 7px 0 0;
+    width: 113px;
+}
+
+
+input.reqfield.maspass {
+	margin: 88px auto 103px;
+	display: block;
+	font-size: 1.6em;
+	width: 241px;
+	text-align: center;
+}
+
+
+
+
+img.icon {
+	vertical-align: bottom;
+	margin-bottom: 0px;
+}
+
+h2 img {
+	vertical-align: text-bottom;
+	margin: 0px 4px 2px 5px;
+}
+
+td[data-role]:after {
+	font-size: 0.8em;
+	color: #737373;
+}
+
+[data-currency="RUR"] td[data-role]:after {
+	content: " р";
+}
+[data-currency="USD"] td[data-role]:after {
+	content: " $";
+}
+
+
+.total[data-currency="RUR"]:after {
+	content: " р";
+}
+
+.total[data-currency="USD"]:after {
+	content: " $";
+}
+
+
+label {
+	margin: 0;
+}
+
+
+.panwrap select, .panwrap input {
+	margin: 5px 0 5px;
+}
+
+.panwrap input[type="checkbox"] {
+	vertical-align: middle;
+	margin: 5px 6px 8px 0;
+}
+
+
+.wrap50 {
+	width: 49%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.wrap50 h2 {
+	margin: 12px 0 0 0;
+	font-size: 1.1em;
+	text-align: center;
+	display: block;
+}
+
+
+.delbutton:hover {
+	text-decoration: none;
+}
+.delbutton {
+	background-color: #e43f3f;
+	border-radius: 3px;
+	padding: 3px;
+	width: 13px;
+	display: inline-block;
+	height: 12px;
+	text-align: center;
+	font: bold 23px/13px monospace;
+	color: white;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.08));
+	text-shadow: 0px 1px 0 black;
+	margin: 0 13px 0 5px;
+	float: right;
+}
+
+
+.wo_tabl {
+	min-width: 450px;
+	display: block;
+	text-align: center;
+	margin: 30px 0;
+}
+
+
+.extname {
+	margin: 20px 0 20px 0;
+	text-align: center;
+	font-size: 1.3em;
+	text-shadow: -1px 0px 0px rgb(0, 0, 0);
+	color: #000000;
+	display: block;
+}
+
+
+.ver {
+	vertical-align: super;
+	font-size: 0.6em;
+	margin: 0 0 0px 6px;
+	color: #737373;
+	text-shadow: -1px 0px 0px #737373;
+}
+
+ul.links {
+	list-style: none;
+	padding: 0;
+	text-align: center;
+}
