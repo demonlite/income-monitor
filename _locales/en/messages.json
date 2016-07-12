@@ -92,6 +92,9 @@
 	"none": {
 		"message": "None"
 	},
+	"rate_extension": {
+		"message": "Rate extension"
+	},
 	"sitedescr_loveplanet": {
 		"message": "Affiliate programm of dating site loveplanet.ru. Payment to WebMoney and a Yandex.Money. Minimal - 300 RUR. Referral system."
 	},
@@ -115,8 +118,5 @@
 	},
 	"sitedescr_adsense": {
 		"message": "Most popular contextual advertising program. Payout to wire transfer or sending a check."
-	},
-	"rate_extension": {
-		"message": "Rate extension"
 	}
 }
