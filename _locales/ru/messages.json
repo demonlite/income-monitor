@@ -3,7 +3,7 @@
 		"message": "Проверка баланса ваших партнерских программ"
 	},
 	"name": {
-		"message": "Affiliate checker"
+		"message": "Income monitor"
 	},
 	"add_site_sitename": {
 		"message": "Добавить сайт: $sitename$",
@@ -93,6 +93,9 @@
 	},
 	"rate_extension": {
 		"message": "Оценить расширение"
+	},
+	"bugreport": {
+		"message": "Отчеты об ошибках и запрос функционала"
 	},
 	"sitedescr_loveplanet": {
 		"message": "Партнерская программа сайта знакомств loveplanet.ru. Выплаты на WebMoney и Yandex.Деньги. Минималка - 300 RUR. Есть реферальная система."

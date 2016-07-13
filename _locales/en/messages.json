@@ -3,7 +3,7 @@
 		"message": "Fast balance viewer for your affiliate networks and partner programms"
 	},
 	"name": {
-		"message": "Affiliate checker"
+		"message": "Income monitor"
 	},
 	"site": {
 		"message": "Site"
@@ -94,6 +94,9 @@
 	},
 	"rate_extension": {
 		"message": "Rate extension"
+	},
+	"bugreport": {
+		"message": "Feature request and bug report"
 	},
 	"sitedescr_loveplanet": {
 		"message": "Affiliate programm of dating site loveplanet.ru. Payment to WebMoney and a Yandex.Money. Minimal - 300 RUR. Referral system."
