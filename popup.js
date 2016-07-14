@@ -640,7 +640,14 @@ window.onload = function() {
 	$('#abotbutton, #back_about').on('click', function(event) {
 		console.log('abotbutton');
 		event.preventDefault();
-
+		
+		var ua = navigator.userAgent;    
+		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';
+		if (ua.search(/(YaBrowser|OPR)/) > 0)  {
+			link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
+		} 
+		document.getElementById('store_url').href = link;
+		
 		switchPanels( $('#page, #about') );
 	});
 
@@ -689,6 +696,9 @@ window.onload = function() {
 		});
 		
 		localStorage.sites = JSON.stringify(sites); // save array
+		
+		$('#sitepass').val('');
+		$('#sitelogin').val('');
 		
 		$('#add_menu, #add_site').toggle(100);
 	});
