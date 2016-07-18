@@ -10,6 +10,8 @@ var settings = {};
 
 var symAfretDot = 2; // Symbols after comma in table
 
+var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+
 
 
 
@@ -92,7 +94,8 @@ function locale() {
 	if (newText) elem.value = newText;
 	
 	// print extension version
-	document.getElementsByClassName('ver')[0].innerText = chrome.app.getDetails().version;
+	document.getElementsByClassName('ver')[0].innerText = version;
+
 }
 
 
@@ -549,21 +552,14 @@ window.onload = function() {
 		settings = JSON.parse(localStorage.settings);
 	}
 	
-	
-	
 	// Run main function
 	fillTable(); 
-	
 	
 	// run translating
 	locale();
 	
-	
 	// Get sites setings from localStorage
 	var sites = (!localStorage.sites) ? [] : JSON.parse(localStorage.sites);
-	
-
-	
 	
 	
 	// click "add site" - panels animation
@@ -634,22 +630,7 @@ window.onload = function() {
 	
 
 	
-	
-	
-	// click about
-	$('#abotbutton, #back_about').on('click', function(event) {
-		console.log('abotbutton');
-		event.preventDefault();
-		
-		var ua = navigator.userAgent;    
-		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';
-		if (ua.search(/(YaBrowser|OPR)/) > 0)  {
-			link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
-		} 
-		document.getElementById('store_url').href = link;
-		
-		switchPanels( $('#page, #about') );
-	});
+
 
 	
 	// Click add %sitename%
@@ -781,6 +762,23 @@ window.onload = function() {
 	});
 
 
+	
+	
+
+	// click about
+	$('#abotbutton, #back_about').on('click', function(event) {
+		console.log('abotbutton');
+		event.preventDefault();
+		
+		var ua = navigator.userAgent;    
+		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';
+		if (ua.search(/(YaBrowser|OPR)/) > 0)  {
+			link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
+		} 
+		document.getElementById('store_url').href = link;
+		
+		switchPanels( $('#page, #about') );
+	});
 }
 
 

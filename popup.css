@@ -127,6 +127,12 @@ tr:hover td {
 	display : none;
 }
 
+
+#about {
+	margin: 0 0 40px 0;
+}
+
+
 /* #add */ 
 h2 {
     margin: 0 0 9px 0px;
