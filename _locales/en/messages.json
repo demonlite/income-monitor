@@ -121,5 +121,8 @@
 	},
 	"sitedescr_adsense": {
 		"message": "Most popular contextual advertising program. Payout to wire transfer or sending a check."
+	},
+	"cacheinfo": {
+		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
 	}
 }

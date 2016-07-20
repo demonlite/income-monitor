@@ -4,13 +4,62 @@
 
 var mySession = [];
 var listenReqId = [];
+
 var modyfHeadersArr = {};
+var addCookieArr = {};
+
 var engine = {};
 var settings = {};
+var tableBuffer = {};
 
+var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
+var dataCacheTime = 100*60*1000; // Expire time of cached data
 
 var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+
+
+
+function toHexString2(bytes) {
+	var storedSubKeyString = '';
+	var hexChar = '0123456789abcdef'.split('');
+	for (var i = 1; i < bytes.length; i++) {
+		if (i > 0 && i > 16) {
+			storedSubKeyString += hexChar[(bytes[i] >> 4) & 0x0f] + hexChar[bytes[i] & 0x0f];
+		}
+	}
+	return storedSubKeyString;
+}
+
+
+/* function myEncrypt(pass, text) {
+	var aesCtr = new aesjs.ModeOfOperation.ctr(sha256.pbkdf2(pass, salt, 100, 32), new aesjs.Counter(10));
+	return aesCtr.encrypt(aesjs.util.convertStringToBytes(text));
+}
+
+function myDecrypt(pass, encryptedBytes) {
+	var aesCtr = new aesjs.ModeOfOperation.ctr(sha256.pbkdf2(pass, salt, 100, 32), new aesjs.Counter(10));
+	return aesjs.util.convertBytesToString(aesCtr.decrypt(encryptedBytes));
+}
+
+
+
+
+function save() {
+	
+	var shaObj = new jsSHA("SHA-256", "TEXT");
+	shaObj.update("pass");
+	var masterpass = shaObj.getHash("HEX");
+	
+ 	localStorage.settings = JSON.stringify({
+		'useMasterpass' : true, 
+		'masterpass' : masterpass
+	});
+} */
+
+
+
+
 
 
 
@@ -22,7 +71,8 @@ Date.prototype.daysInMonth = function() {
 
 // remove from string "$", ","
 String.prototype.clearCurrency = function() {
-	return this.replace(/,/, '.').replace(/\$|,/g, "").trim();
+	//return this.replace(/,/, '.').replace(/\$|,|\s/g, "").trim();
+	return this.replace(/,/, '.').replace(/\$|,|\s|руб/g, "").trim();
 };
 
 
@@ -60,6 +110,10 @@ function echoDate(template, date) {
 	if (date === 'lastDayThisMonth') {
 		date = new Date();
 		date.setDate(33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
+	}
+	if (date === 'firstDayThisMonth') {
+		date = new Date();
+		date.setDate(1);
 	}
 	var date = date || new Date();
 	if (template === 'D') return date.getDate(); 
@@ -149,6 +203,11 @@ function myRequest(opt) {
 	// if headers is set - store it for for inject in request in onBeforeSendHeaders function
 	if (opt.headers) modyfHeadersArr[id] = opt.headers;
 	
+	
+	if (opt.cookies) addCookieArr[id] = opt.cookies;
+
+
+	
 	$.ajax({
 		type: opt.type,
 		url : opt.url,
@@ -166,7 +225,11 @@ myRequest.counter = 0;
 
 
 
-
+function getCacheName(sitekey, login) {
+	var akey = aesjs.util.convertStringToBytes(sitekey + login);
+	var pb = sha256.pbkdf2(akey, [], 0, 20);
+	return 'cache_'+toHexString2(pb);
+}
 
 
 
@@ -177,23 +240,55 @@ function fillTable() {
 	//return;
 
 	// process result of getBalance()
-	var procGB = function(result, sitekey, login) {
+	var procGB = function(result, sitekey, login, fromCache) {
 		console.log('processGetBalance', result, sitekey, login);
+		
+		var fromCache = fromCache || false;
+		var roles = 'today yesterday month predic balance'.split(' ');
+		var hash = sitekey + '_#_' +login;
 		
 		if (result.error) {
 			if (result.error === 'INVALID_PASS') {
 				// WRITE A CODE!
 			}
-			
 			return;
 		}
 		
-		// clear strings values
+		
+		// prepare tableBuffer
+		if (!tableBuffer[hash]) tableBuffer[hash] = {
+			'month' : '...',
+			'yesterday' : '...',
+			'today' : '...',
+			'balance' : '...'
+		};
+		
+		
 		for (var key in result) {
-			if (typeof result[key] === 'string') {
-				if (result[key] !== 'n/a') result[key] = result[key].clearCurrency();
-			}
+			// clear strings values
+			if (typeof result[key] === 'string') if (result[key] !== 'n/a') result[key] = result[key].clearCurrency();
+			
+			// insert into tableBuffer
+			if (roles.indexOf(key) != -1) tableBuffer[hash][key] = result[key];
 		}
+
+		
+		//console.log('tableBuffer', tableBuffer);
+		
+
+		
+		// save in cache
+		if (!fromCache) {
+			var cacheName = getCacheName(sitekey, login);  // prepare key name
+			
+			// save in LS
+			localStorage[cacheName] = JSON.stringify({
+				datetime : +new Date(),
+				data : tableBuffer[hash]
+			});
+		}
+		
+		
 		
 		// prediction
 		// if not set "result.predic" - calculate by himself
@@ -231,6 +326,9 @@ function fillTable() {
 				}
 			}
 			
+			document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"]').classList.add('from-cache');
+			
+			
 			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td[data-role="'+key+'"]');
 			if (el) {
 				el.innerText = ins;
@@ -246,8 +344,7 @@ function fillTable() {
 			}
 		}
 		
-		// recalc inTotal fields
-		var roles = 'today yesterday month predic balance'.split(' ');
+
 		
 		// Cacl and print total in footer of table
 		// enumerate columns
@@ -345,17 +442,32 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'seriouspartner') continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
 			
-			console.log('fired getBalance for', sites[j].sitekey);
+			// check the cache
+			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
+			var cacheObj = JSON.parse(localStorage[cacheName]);
 			
-			// wrappen need for throw sitekey to procGB
-			(function() {
-				var login   = sites[j].login;
-				var sitekey = sites[j].sitekey;
-				var wrapper = function(param) {
-					procGB(param, sitekey, login);
-				};
-				engine[sites[j].sitekey].getBalance(wrapper, sites[j].login, sites[j].pass);
-			})();
+			
+			if ((cacheObj !== undefined) && (+new Date() - cacheObj.datetime < dataCacheTime)) {
+			
+				console.log('From cache!');
+				
+				procGB(cacheObj.data, sites[j].sitekey, sites[j].login, true);
+			
+			} else {
+			
+				console.log('fired getBalance for', sites[j].sitekey);
+				
+				// wrappen need for throw sitekey to procGB
+				(function() {
+					var login   = sites[j].login;
+					var sitekey = sites[j].sitekey;
+					var wrapper = function(param) {
+						procGB(param, sitekey, login);
+					};
+					engine[sites[j].sitekey].getBalance(wrapper, sites[j].login, sites[j].pass);
+				})();
+			
+			}
 		}
 	
 	}
@@ -422,7 +534,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		}
 		
 		
-		// prepare cookies
+		// 1. prepare cookies
 		var respArr = [];
 		var j = mySession.length;
 		while (j--) {
@@ -432,13 +544,23 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			}
 		}
 		
-		// insert new cookies
+		// 2. add cookies from "addCookieArr"
+		if (addCookieArr[affId]) {
+			var newCookies = addCookieArr[affId];
+			for (var key in newCookies) {
+				respArr.push(key + '=' + newCookies[key]);
+			}
+		}
+		
+		
+		// 3. insert new cookies
 		details.requestHeaders.push({
 			'name' : 'cookie',
 			'value' : respArr.join('; ')
 		});
 		
-		// modify headers if needed
+		
+		// modify headers, if needed
 		if (modyfHeadersArr[affId]) {
 
 			// change existing items
@@ -459,7 +581,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			}
 		}
 		
-		console.log('onBeforeSendHeaders out', details);
+		//console.log('onBeforeSendHeaders out', details);
 
         return {
             requestHeaders: details.requestHeaders
@@ -532,7 +654,7 @@ chrome.webRequest.onHeadersReceived.addListener(
             } 
         }
 		
-		console.log('onHeadersReceived out', details);
+		//console.log('onHeadersReceived out', details);
 		
         return {
             responseHeaders: details.responseHeaders

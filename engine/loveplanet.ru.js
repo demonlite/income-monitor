@@ -36,13 +36,13 @@ engine['loveplanet'] = {
 					console.log('login', login);
 	
 					// first day of month
+					var from = echoDate('YYYY-MM-DD', 'firstDayThisMonth');
 					if (new Date().getDate() == 1) {
-						// start from yesterday (30 or 31 of last month)
+						// start from yesterday
 						var date = new Date();
 						date.setDate(date.getDate() - 1);
-					} else {
-						var date = new Date();
-					}
+						var from = echoDate('YYYY-MM-DD', date);
+					} 
 					
 					
 					//login=611&action=101&sub_act=0&csv=1&preset=&id_domain=0&custom=&from_date=27.5.2016&to_date=2.6.2016
@@ -54,13 +54,12 @@ engine['loveplanet'] = {
 							'sub_act'   : 0,
 							'login' 	: login,
 							'action' 	: 101,
-							'csv' 		: 1, // dsdsd
+							'csv' 		: 1,
 							'preset' 	: 2,
 							'id_domain' : 0,
 							'custom'	: '' ,
-							//'from_date'	: firstDayOfMonth('YYYY-MM-DD'),
-							'from_date'	: echoDate('YYYY-MM-DD', date),
-							'to_date'	: curDayOfMonth(),
+							'from_date'	: from,
+							'to_date'	: echoDate('YYYY-MM-DD')
 						},
 						dataType: 'html',
 						success: function(html){

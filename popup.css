@@ -70,7 +70,7 @@ tfoot tr td {
 
 td {
     color: #505052;
-    padding: 7px 8px;
+    padding: 6px 8px;
     transition: .3s linear;
 	white-space: nowrap;
 	min-width: 68px;
@@ -78,6 +78,10 @@ td {
 
 td[data-role], .total {
 	font-family: ubuntu, 'consolas', sans-serif;
+}
+
+tr.from-cache td, tr.from-cache td[data-role]:after {
+	color: #8f8f90;
 }
 
 td.site {
@@ -367,4 +371,11 @@ ul.links {
 	list-style: none;
 	padding: 0;
 	text-align: center;
+}
+
+.notebin {
+	font-size: 0.9em;
+	color: #737373;
+	background: #feffdc;
+	padding: 3px 7px 4px;
 }
