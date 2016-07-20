@@ -326,8 +326,7 @@ function fillTable() {
 				}
 			}
 			
-			document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"]').classList.add('from-cache');
-			
+			if (fromCache) document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"]').classList.add('from-cache');
 			
 			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td[data-role="'+key+'"]');
 			if (el) {
@@ -444,7 +443,7 @@ function fillTable() {
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
-			var cacheObj = JSON.parse(localStorage[cacheName]);
+			var cacheObj = localStorage[cacheName] ? JSON.parse(localStorage[cacheName]) : {};
 			
 			
 			if ((cacheObj !== undefined) && (+new Date() - cacheObj.datetime < dataCacheTime)) {

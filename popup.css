@@ -16,20 +16,18 @@ body {
 }
 
 
-
-
 h2 {
-    margin: 0;
-    padding: 0;
+	padding: 0;
+    margin: 0 0 9px 0px;
+    font-size: 1.2em;
+    font-weight: normal;
+    display: inline-block;
 }
 
 p {
     margin: 0 0 5px 0;
 }
 
-p.mline {
-	margin: 6px 0 0 0;
-}
 
 a {
     text-decoration: none;
@@ -44,6 +42,10 @@ a:hover {
 	width: 100%;
 	height: 0;
 }
+
+
+
+/* data table */
 table {
   max-width: 100%;
   width: 100%;
@@ -69,7 +71,7 @@ tfoot tr td {
 }
 
 td {
-    color: #505052;
+	color : #3c3c3c;
     padding: 6px 8px;
     transition: .3s linear;
 	white-space: nowrap;
@@ -102,6 +104,33 @@ tr:hover td {
     background-color: #c4dbf3;
 }
 
+td[data-role]:after {
+	font-size: 0.8em;
+	color: #3c3c3c;
+}
+
+[data-currency="RUR"] td[data-role]:after {
+	content: " р";
+}
+[data-currency="USD"] td[data-role]:after {
+	content: " $";
+}
+
+
+.total[data-currency="RUR"]:after {
+	content: " р";
+}
+
+.total[data-currency="USD"]:after {
+	content: " $";
+}
+
+/* end - data table */
+
+
+.mline {
+	margin: 6px 0 0 0;
+}
 
 .stud {
 	width: 13%;
@@ -133,17 +162,12 @@ tr:hover td {
 
 
 #about {
-	margin: 0 0 40px 0;
+	margin: 0 0 29px 0;
 }
 
 
 /* #add */ 
-h2 {
-    margin: 0 0 9px 0px;
-    font-size: 1.2em;
-    font-weight: normal;
-    display: inline-block;
-}
+
 
 .serach-wrap {
     float: right;
@@ -231,7 +255,6 @@ a.back {
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
 	transition: 0.2s ease-in-out all;
 }
-
 a.back:hover {
     text-decoration: none;
     background-color: #5697ce;
@@ -268,27 +291,6 @@ img.icon {
 h2 img {
 	vertical-align: text-bottom;
 	margin: 0px 4px 2px 5px;
-}
-
-td[data-role]:after {
-	font-size: 0.8em;
-	color: #737373;
-}
-
-[data-currency="RUR"] td[data-role]:after {
-	content: " р";
-}
-[data-currency="USD"] td[data-role]:after {
-	content: " $";
-}
-
-
-.total[data-currency="RUR"]:after {
-	content: " р";
-}
-
-.total[data-currency="USD"]:after {
-	content: " $";
 }
 
 
@@ -371,6 +373,9 @@ ul.links {
 	list-style: none;
 	padding: 0;
 	text-align: center;
+}
+ul.links li {
+	padding: 0px 0 5px;
 }
 
 .notebin {
