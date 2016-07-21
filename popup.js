@@ -14,22 +14,14 @@ var tableBuffer = {};
 
 var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
-var dataCacheTime = 100*60*1000; // Expire time of cached data
+var dataCacheTime = 10*60*1000; // Expire time of cached data
+
+
+// DEBUG !!!
+//var dataCacheTime = 0; // Expire time of cached data
 
 var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
 
-
-
-function toHexString2(bytes) {
-	var storedSubKeyString = '';
-	var hexChar = '0123456789abcdef'.split('');
-	for (var i = 1; i < bytes.length; i++) {
-		if (i > 0 && i > 16) {
-			storedSubKeyString += hexChar[(bytes[i] >> 4) & 0x0f] + hexChar[bytes[i] & 0x0f];
-		}
-	}
-	return storedSubKeyString;
-}
 
 
 /* function myEncrypt(pass, text) {
@@ -71,9 +63,23 @@ Date.prototype.daysInMonth = function() {
 
 // remove from string "$", ","
 String.prototype.clearCurrency = function() {
-	//return this.replace(/,/, '.').replace(/\$|,|\s/g, "").trim();
-	return this.replace(/,/, '.').replace(/\$|,|\s|руб/g, "").trim();
+	var a = this.replace(/,/, '.').replace(/\$|,|\s|руб\./g, "").trim();
+	if (a.split(/\./).length-1 >= 2) a = a.replace(/\./, '');  // if 2 or more dots - remove first dot
+	return a;
 };
+
+
+
+function toHexString2(bytes) {
+	var storedSubKeyString = '';
+	var hexChar = '0123456789abcdef'.split('');
+	for (var i = 1; i < bytes.length; i++) {
+		if (i > 0 && i > 16) {
+			storedSubKeyString += hexChar[(bytes[i] >> 4) & 0x0f] + hexChar[bytes[i] & 0x0f];
+		}
+	}
+	return storedSubKeyString;
+}
 
 
 // merge 2 obj by extending
@@ -83,8 +89,6 @@ function extend2(destination, source) {
 		res[property] = source[property];
 	return res;
 }
-
-
 
 
 
@@ -106,22 +110,23 @@ function lastDayOfMonth() {
 	return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +  (33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
 }
 
-function echoDate(template, date) {
-	if (date === 'lastDayThisMonth') {
-		date = new Date();
-		date.setDate(33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
-	}
-	if (date === 'firstDayThisMonth') {
-		date = new Date();
-		date.setDate(1);
-	}
-	var date = date || new Date();
+function echoDate(template, inDate) {
+	
+	var date = new Date();
+	
+	if (inDate === 'lastDayThisMonth') 	date.setDate(33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
+	if (inDate === 'firstDayThisMonth')	date.setDate(1);
+	if (inDate === 'yesterday')			date.setDate(date.getDate() - 1);
+
+	if (typeof inDate === "object") date = inDate;
+	
 	if (template === 'D') return date.getDate(); 
 	if (template === 'DD') return ('0' + date.getDate()).slice(-2); 
 	if (template === 'M') return date.getMonth() + 1; 
 	if (template === 'MM') return ('0' + (date.getMonth() + 1)).slice(-2); 
 	if (template === 'YYYY') return date.getFullYear(); 
 	if (template === 'YYYY-MM-DD') return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2); 
+	if (template === 'YYYY/MM/DD') return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2); 
 };
 
 
@@ -202,11 +207,7 @@ function myRequest(opt) {
 	
 	// if headers is set - store it for for inject in request in onBeforeSendHeaders function
 	if (opt.headers) modyfHeadersArr[id] = opt.headers;
-	
-	
 	if (opt.cookies) addCookieArr[id] = opt.cookies;
-
-
 	
 	$.ajax({
 		type: opt.type,
@@ -439,7 +440,7 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'halileo') continue; 
 			//if (sites[j].sitekey !== 'cpazilla') continue; 
 			//if (sites[j].sitekey !== 'seriouspartner') continue;
-			//if (sites[j].sitekey !== 'loveplanet') continue;
+			//if (sites[j].sitekey !== 'trafficshop') continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);

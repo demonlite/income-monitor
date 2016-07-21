@@ -124,5 +124,8 @@
 	},
 	"cacheinfo": {
 		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
+	},
+	"note_add_pp": {
+		"message": "Waiting for your suggestions for  adding affiliate programs"
 	}
 }

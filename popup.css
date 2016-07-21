@@ -384,3 +384,8 @@ ul.links li {
 	background: #feffdc;
 	padding: 3px 7px 4px;
 }
+
+.note {
+	text-align: center;
+	font-size: 0.85em;
+}

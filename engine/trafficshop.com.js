@@ -56,16 +56,24 @@ engine['trafficshop'] = {
 						
 						delete parser, tmpDom;
 						
-						if (new Date().getDate() == 1) {
+/* 						if (new Date().getDate() == 1) {
 							// start from yesterday (30 or 31 of last month)
 							var date = new Date();
 							date.setDate(date.getDate() - 1);
 						} else {
 							var date = new Date();
+						} */
+						
+						// first day of month
+						var date = new Date();
+						if (date.getDate() == 1) {
+							date.setDate(date.getDate() - 1);  // start from yesterday  if 1 day of month
+						} else {
+							date.setDate(1);
 						}
 						
 						var postdata = 'period=9&SD=1&SM='+echoDate('M', date)+'&SY='+echoDate('YYYY', date)+'&ED='+echoDate('D')+'&EM='+echoDate('M')+'&EY='+echoDate('YYYY')+'&sel_stat_type=1&x=51&y=12&submit=submit';
-						//https://www.trafficshop.com/publishers/selling_traffic/skimmed/
+
 						
 						var resp = {
 							'month' : 0,
@@ -77,7 +85,6 @@ engine['trafficshop'] = {
 						// Request 3 - Skimmed stats
 						myRequest({
 							type: "POST",
-							//url : 'https://www.trafficshop.com/publishers/selling_traffic/skimmed/',
 							url : 'https://www.trafficshop.com/publishers/selling_traffic/skimmed/?type=4',
 							data: postdata,
 							headers : {
@@ -86,33 +93,56 @@ engine['trafficshop'] = {
 							},
 							success: function(html){
 								
-								//console.log('html', html);
+								var parser = new DOMParser;
+								var tmpDom = parser.parseFromString(html, "text/html");
+								var elems = tmpDom.querySelectorAll('#content > div > table.data > tbody > tr');
+								
+								for(var i in elems){
+									if (!elems.hasOwnProperty(i)) continue;
+									if ( elems[i].querySelectorAll('td').length == 0) continue;
+									
+									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
+									var revenue = elems[i].querySelector('td:last-of-type').innerText;
+									
+									if (td1 === 'Total:') resp.month += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
+								}
+								
+								if (typeof calbackFunc == 'function') calbackFunc(resp);
+								delete parser, tmpDom;
+							}
+						});	
+
+
+						
+						// Request 4 - Popunder stats
+						myRequest({
+							type: "POST",
+							url : 'https://www.trafficshop.com/publishers/selling_traffic/popunder/?type=4',
+							data: postdata,
+							headers : {
+								'Referer':'https://www.trafficshop.com/publishers/selling_traffic/popunder/?type=4',
+								'Origin' :'https://www.trafficshop.com'
+							},
+							success: function(html){
 								
 								var parser = new DOMParser;
 								var tmpDom = parser.parseFromString(html, "text/html");
+								var elems = tmpDom.querySelectorAll('#content > div > table.data > tbody > tr');
 								
-								tmpDom2 = tmpDom;
-								
-								var month = tmpDom.querySelector('#content > div > table.data > tbody > tr:last-of-type > td:last-of-type');
-								if (month) {
-									resp.month += parseFloat(month.innerText.clearCurrency());
-								} else {
-									console.log('error parse month');
-								}
-
-								var today = tmpDom.querySelector('#content > div > table.data > tbody > tr:nth-child(2) > td > a.thickbox');
-								if (today) {
-									resp.today += parseFloat(today.innerText.clearCurrency());
-								} else {
-									console.log('error parse today');
+								for(var i in elems){
+									if (!elems.hasOwnProperty(i)) continue;
+									if ( elems[i].querySelectorAll('td').length == 0) continue;
+									
+									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
+									var revenue = elems[i].querySelector('td:last-of-type').innerText;
+									
+									if (td1 === 'Total:') resp.month += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
 								}
 								
-								var yesterday = tmpDom.querySelector('#content > div > table.data > tbody > tr:nth-child(3) > td > a.thickbox');
-								if (yesterday) {
-									resp.yesterday += parseFloat(yesterday.innerText.clearCurrency());
-								} else {
-									console.log('error parse yesterday');
-								}
 								
 								var balance = tmpDom.querySelector('.balance:not(.balance-advertiser) span:nth-child(1)');
 								if (balance) {
@@ -124,8 +154,6 @@ engine['trafficshop'] = {
 								if (typeof calbackFunc == 'function') calbackFunc(resp);
 								delete parser, tmpDom;
 							}
-							
-							
 						});
 					}
 					
