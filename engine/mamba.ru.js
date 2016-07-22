@@ -1,7 +1,6 @@
-
 engine['mamba'] = {
 	'category' 		: 'dating',				// Site category: dating, teasers, advertising, e.t.c
-	'sitename' 		: 'mamba ',		// Visible sitename
+	'sitename' 		: 'Mamba ',				// Visible sitename
 	'currency' 		: 'RUR',				// RUR or USD
 	'TSL' 			: true,					// use https?
 	'mainpageUrl' 	: 'https://partner.mamba.ru/login.phtml',	// for clickable sitename in revenue table
@@ -9,18 +8,16 @@ engine['mamba'] = {
 	'icon'			: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAB3RJTUUH3gUZCTYwoQXazAAAAaZJREFUeJyNks1LG0Echt/ZnYRNzMcqJocQIoUmxQriwUP14s0eBD+OehVUGnoo9ND/oJ5EL1YRQdr/oNBDiceAAS8eSrGRYIgiysZ13RiTzGRnesiKjdCYlznMA79nGOYdksvl4jdbkbsfXsfA/8PUiBGYOu9dofHrzZj1FYDsMA54HCNm7kEIUvumexyr4/BjuKpTWrd+H7g8OPaMQLlFnQb0me0W1wvLZ8eo2vAHEXsJQnCeR/UWPSHEX0HzAwC5X4Pvg3v/7Jw/Mbuk9r+unP652t+lmndgZpGEXtSMy+vMxvCoCYDcfQaAnk8SAL84Uj0qCSaIFrZPjnxhn6o4JJQg3kD5MKPtTxICRTAI9vB22dXql2F7axRAKDnCsqvVzaHKzjiAvpEJ3lAFeyIcZwSDsNxC2K/vgsExSgAUjxcICAZFckjuCqWCIzmKBReLJ20om5C8XYjMr0uO6MJ6C6MLbdgSYKZhpiEf8u/+Cd58DJtpEHOpq44fu2tSnda7/RpNTVfs1DQcdLns5BQtv3lHmjyY/0nvzU5n+/sqqbflsfd/AS0Y4MYCiKBxAAAAAElFTkSuQmCC',
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		
-		
+		// first day not neet to fix - today balance not available
 
 		myRequest({
-			type: "GET",
+			type: 'GET',
 			url : 'https://partner.mamba.ru/login.phtml',
 			headers : {
 				'Referer': 'https://partner.mamba.ru/login.phtml',
 				'Origin' : 'https://partner.mamba.ru'
 			},
-/* 			cookies : {
-				'mmbTracker' : '1452464929_X2axcc8qwQGb3NCt4N6ttUuGxeZhcCyBnSIK2c6pS41hE6cU5YDJJ5klQCogARBs33OB5fBrnJGvIwjkhLtiC98xLoWB3hBgoosT8pV'
-			}, */ 
+
 			success: function(html){
 
  				var parser = new DOMParser;
@@ -32,11 +29,10 @@ engine['mamba'] = {
 				} else {
 					console.log('input[name="s_post"] not found. Try without him');
 				}
-				delete parser, tmpDom;
 
 				// Request 2
 				myRequest({
-					type: "POST",
+					type: 'POST',
 					url : 'https://partner.mamba.ru/login.phtml',
 					data: {
 						's_post' : randr,
@@ -49,6 +45,7 @@ engine['mamba'] = {
 						'Origin' : 'https://partner.mamba.ru'
 					},
 					cookies : {
+						// i not sure what i can use this
 						'mmbTracker' : '1452464929_X2axcc8qwQGb3NCt4N6ttUuGxeZhcCyBnSIK2c6pS41hE6cU5YDJJ5klQCogARBs33OB5fBrnJGvIwjkhLtiC98xLoWB3hBgoosT8pV'
 					},
 					success: function(html){
@@ -76,10 +73,7 @@ engine['mamba'] = {
 						}
 						
 						// yesterday
-						var date = new Date();
-						date.setDate(date.getDate() - 1);
-						
-						var txtDate = echoDate('YYYY-MM-DD', date);
+						var txtDate = echoDate('YYYY-MM-DD', 'yesterday');
 						
 						var tbl = tmpDom.querySelectorAll('.b-report__table tbody tr[class]');
 						for(var i in tbl){
@@ -102,28 +96,17 @@ engine['mamba'] = {
 							console.log('mamba : error parse programIds');
 							return;
 						}
-						
-						// first day of month
-						var period = echoDate('YYYY-MM-DD', 'firstDayThisMonth') + ':' + echoDate('YYYY-MM-DD');
-						if (new Date().getDate() == 1) {
-							// start from yesterday
-							var date = new Date();
-							date.setDate(date.getDate() - 1);
-							period =  echoDate('YYYY-MM-DD', date) + ':' + echoDate('YYYY-MM-DD')
-						}
-						
-						delete parser, tmpDom;
 					
-						// Request 3
+						// Request 3 - month
 						myRequest({
-							type: "POST",
+							type: 'POST',
 							url : 'https://partner.mamba.ru/report/index.phtml?action=update',
 							data: {
-								'period' : period,
-								'type' : 'all',
-								'programIds' : fromExp[1],
-								'linkIds' : '',
-								's_post' : randr
+								'period' 	: echoDate('YYYY-MM-DD', 'firstDayThisMonth') + ':' + echoDate('YYYY-MM-DD'),
+								'type' 		: 'all',
+								'programIds': fromExp[1],
+								'linkIds' 	: '',
+								's_post' 	: randr
 							},
 							headers : {
 								'Referer': 'https://partner.mamba.ru/report/index.phtml',
@@ -131,15 +114,11 @@ engine['mamba'] = {
 							},
 							success: function(html){
 								
-								console.log('html', html.summary);
-								
 								calbackFunc({'month' : html.summary});
-								
-								
 								
 								// Request 4 - logoff
 								myRequest({
-									type: "GET",
+									type: 'GET',
 									url : 'https://partner.mamba.ru/logout.phtml?&s_post='+randr,
 									headers : {
 										'Referer': 'https://partner.mamba.ru/report/index.phtml',

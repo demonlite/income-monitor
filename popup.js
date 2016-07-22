@@ -18,7 +18,7 @@ var dataCacheTime = 10*60*1000; // Expire time of cached data
 
 
 // DEBUG !!!
-//var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
 
@@ -439,8 +439,11 @@ function fillTable() {
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'halileo') continue; 
 			//if (sites[j].sitekey !== 'cpazilla') continue; 
-			//if (sites[j].sitekey !== 'seriouspartner') continue;
+			if (sites[j].sitekey !== 'seriouspartner') continue;
 			//if (sites[j].sitekey !== 'trafficshop') continue;
+			//if (sites[j].sitekey !== 'exoclick') continue;
+			//if (sites[j].sitekey !== 'loveplanet') continue;
+			//if (sites[j].sitekey !== 'mamba1') continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);

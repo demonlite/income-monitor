@@ -1,5 +1,5 @@
 engine['trafficshop'] = {
-	'category' 		: 'other',				// Site category: dating, teasers, advertising, e.t.c
+	'category' 		: 'adult',				// Site category: dating, teasers, advertising, e.t.c
 	'sitename' 		: 'TrafficShop ',		// Visible sitename
 	'currency' 		: 'USD',				// RUR or USD
 	'TSL' 			: true,					// use https?
@@ -8,14 +8,14 @@ engine['trafficshop'] = {
 	'icon'			: 'data:image/gif;base64,R0lGODlhEAAQALMAAPqXLeGlZunq6sjKy1VXV52Fa/zSo/Z3AKmssJCVmfrjyrGbgnd1cfe+f/Z/AP///yH5BAAAAAAALAAAAAAQABAAAARs8MlJn6pzCNmAx1LCPMZhNqA0DEYQNMJWCYOiGB7AEAM1LACH8CAMEBITAQNAFA4BDUbvgSg4rw7iAiFBLLDXQwD5GCzBzrFEyUQ71KEvGlDgrgkBdIAhU+HbAAELPBhmBS4FDAh9MwmOZBQRADs=',
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		
-
+		// first day ready
 
 		myRequest({
-			type: "GET",
+			type: 'GET',
 			url : 'https://www.trafficshop.com/',
 			headers : {
-				'Referer': 'https://cpazilla.ru/user/login',
-				'Origin' : 'https://cpazilla.ru'
+				'Referer': 'https://www.trafficshop.com/',
+				'Origin' : 'https://www.trafficshop.com'
 			},
 			success: function(html){
 
@@ -56,25 +56,17 @@ engine['trafficshop'] = {
 						
 						delete parser, tmpDom;
 						
-/* 						if (new Date().getDate() == 1) {
-							// start from yesterday (30 or 31 of last month)
-							var date = new Date();
-							date.setDate(date.getDate() - 1);
-						} else {
-							var date = new Date();
-						} */
 						
 						// first day of month
 						var date = new Date();
 						if (date.getDate() == 1) {
-							date.setDate(date.getDate() - 1);  // start from yesterday  if 1 day of month
+							date.setDate(0);  // start from yesterday  if 1 day of month
 						} else {
 							date.setDate(1);
 						}
 						
 						var postdata = 'period=9&SD=1&SM='+echoDate('M', date)+'&SY='+echoDate('YYYY', date)+'&ED='+echoDate('D')+'&EM='+echoDate('M')+'&EY='+echoDate('YYYY')+'&sel_stat_type=1&x=51&y=12&submit=submit';
 
-						
 						var resp = {
 							'month' : 0,
 							'yesterday' : 0,
@@ -84,7 +76,7 @@ engine['trafficshop'] = {
 						
 						// Request 3 - Skimmed stats
 						myRequest({
-							type: "POST",
+							type: 'POST',
 							url : 'https://www.trafficshop.com/publishers/selling_traffic/skimmed/?type=4',
 							data: postdata,
 							headers : {
@@ -107,6 +99,11 @@ engine['trafficshop'] = {
 									if (td1 === 'Total:') resp.month += parseFloat(revenue.clearCurrency());
 									if (td1 === echoDate('YYYY/MM/DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
 									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
+								}
+								
+								// compensation first day of month
+								if (new Date().getDate() == 1) {
+									resp.month = resp.today;
 								}
 								
 								if (typeof calbackFunc == 'function') calbackFunc(resp);
@@ -143,6 +140,10 @@ engine['trafficshop'] = {
 									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
 								}
 								
+								// compensation first day of month
+								if (new Date().getDate() == 1) {
+									resp.month = resp.today;
+								}
 								
 								var balance = tmpDom.querySelector('.balance:not(.balance-advertiser) span:nth-child(1)');
 								if (balance) {
