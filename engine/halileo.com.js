@@ -12,7 +12,7 @@ engine['halileo'] = {
 		
 		myRequest({
 			type: 'POST',
-			url : 'http://df.halileo.com/auth/index/login',
+			url : 'http://df.halileo.com/auth/login',
 			data: {
 				'userLogin': login,
 				'userPassword': pass,
@@ -22,41 +22,37 @@ engine['halileo'] = {
 				
 				
  				var parser = new DOMParser;
-				var tmpDom = parser.parseFromString(html, "text/html");
+				tmpDom = parser.parseFromString(html, 'text/html');
 
-				var balance = tmpDom.querySelector('.earnings table  tr:nth-child(5) > td:nth-child(2) > span');
+/* 				var balance = tmpDom.querySelector('.earnings table  tr:nth-child(5) > td:nth-child(2) > span');
 				if (balance) {
 					balance = parseFloat(balance.innerText.clearCurrency());
 					console.log('balance', balance);
 				} else {
 					console.log('error parse balance');
 				}
-				if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance});
+				if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance}); */
 
 				
-				var yesterday = tmpDom.querySelector('.earnings table  tr:nth-child(1) > td:nth-child(2) > span');
+				var yesterday = tmpDom.querySelector('.content_left.big > div:nth-child(2) > table > tbody > tr:nth-child(1) > td:last-of-type');
 				if (yesterday) {
 					yesterday = parseFloat(yesterday.innerText.clearCurrency());
 					console.log('yesterday', yesterday);
 				} else {
 					console.log('error parse yesterday');
 				}
-				if (typeof calbackFunc == 'function') calbackFunc({'yesterday' : yesterday});
 				
 				
 				
-				var month = tmpDom.querySelector('.stats_rightbar > table > tbody:nth-child(4) > tr:nth-child(4) > td:nth-child(8)');
+				var month = tmpDom.querySelector('.content_left.big > div:nth-child(2) > table > tbody > tr:nth-child(3) > td:last-of-type');
 				if (month) {
 					month = parseFloat(month.innerText.clearCurrency());
 					console.log('month', month);
 				} else {
 					console.log('error parse month');
 				}
-				if (typeof calbackFunc == 'function') calbackFunc({'month' : month});
-				if (typeof calbackFunc == 'function') calbackFunc({'today' : 'n/a'});
-				
-				
-				delete parser, tmpDom;
+				if (typeof calbackFunc == 'function') calbackFunc({'today' : 'n/a', 'month' : month, 'yesterday' : yesterday, 'balance' : 'n/a'});
+
 				
 			} 
 			

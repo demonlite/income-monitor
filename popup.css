@@ -71,9 +71,9 @@ tfoot tr td {
 }
 
 td {
-	color : #3c3c3c;
-    padding: 6px 8px;
-    transition: .3s linear;
+	color: #3c3c3c;
+	padding: 5px 8px 6px;
+	transition: .3s ease-in-out;
 	white-space: nowrap;
 	min-width: 68px;
 }

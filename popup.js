@@ -14,7 +14,7 @@ var tableBuffer = {};
 
 var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
-var dataCacheTime = 10*60*1000; // Expire time of cached data
+var dataCacheTime = 10*60*1000; // Expire time of cached data - 10 minuts
 
 
 // DEBUG !!!
@@ -200,7 +200,7 @@ function myRequest(opt) {
 	
 	var id =  ++myRequest.counter;
 	var def = {
-		type: "GET",
+		type: 'GET',
 		dataType: 'html',
 		fail: function() {},
 	};
@@ -437,13 +437,11 @@ function fillTable() {
 			
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
-			//if (sites[j].sitekey !== 'halileo') continue; 
-			//if (sites[j].sitekey !== 'cpazilla') continue; 
-			if (sites[j].sitekey !== 'seriouspartner') continue;
-			//if (sites[j].sitekey !== 'trafficshop') continue;
-			//if (sites[j].sitekey !== 'exoclick') continue;
-			//if (sites[j].sitekey !== 'loveplanet') continue;
-			//if (sites[j].sitekey !== 'mamba1') continue;
+			if (sites[j].sitekey !== 'halileo') continue;
+			
+			// MY DEBUG skip
+			//if ((sites[j].sitekey == 'exoclick') || (sites[j].sitekey == 'trafficshop') || (sites[j].sitekey == 'mamba') || (sites[j].sitekey == 'adsense')) continue;
+			//if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -584,7 +582,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			}
 		}
 		
-		//console.log('onBeforeSendHeaders out', details);
+		console.log('onBeforeSendHeaders out', details);
 
         return {
             requestHeaders: details.requestHeaders
@@ -657,7 +655,7 @@ chrome.webRequest.onHeadersReceived.addListener(
             } 
         }
 		
-		//console.log('onHeadersReceived out', details);
+		console.log('onHeadersReceived out', details);
 		
         return {
             responseHeaders: details.responseHeaders

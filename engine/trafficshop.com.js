@@ -53,9 +53,7 @@ engine['trafficshop'] = {
 							if (typeof calbackFunc == 'function') calbackFunc({'error' : 'INVALID_PASS'});
 							return;
 						}
-						
-						delete parser, tmpDom;
-						
+
 						
 						// first day of month
 						var date = new Date();
@@ -66,13 +64,12 @@ engine['trafficshop'] = {
 						}
 						
 						var postdata = 'period=9&SD=1&SM='+echoDate('M', date)+'&SY='+echoDate('YYYY', date)+'&ED='+echoDate('D')+'&EM='+echoDate('M')+'&EY='+echoDate('YYYY')+'&sel_stat_type=1&x=51&y=12&submit=submit';
-
 						var resp = {
 							'month' : 0,
 							'yesterday' : 0,
 							'today' : 0,
 							'balance' : 0
-						}
+						};
 						
 						// Request 3 - Skimmed stats
 						myRequest({
@@ -107,7 +104,6 @@ engine['trafficshop'] = {
 								}
 								
 								if (typeof calbackFunc == 'function') calbackFunc(resp);
-								delete parser, tmpDom;
 							}
 						});	
 
