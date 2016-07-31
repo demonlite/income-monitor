@@ -12,7 +12,7 @@ engine['cpazilla'] = {
 		
 
 		myRequest({
-			type: "POST",
+			type: 'POST',
 			url : 'https://cpazilla.ru/user/login/?redirect=%2F',
 			data: {
 				'email': login,
@@ -26,7 +26,7 @@ engine['cpazilla'] = {
 			success: function(html){
 				
  				var parser = new DOMParser;
-				var tmpDom = parser.parseFromString(html, "text/html");
+				var tmpDom = parser.parseFromString(html, 'text/html');
 				
 				var balance = tmpDom.querySelector('#nav-user-info > li.balance > a > span');
 				if (balance) {
@@ -41,53 +41,60 @@ engine['cpazilla'] = {
 				
 				// Request 2
 				
+				// first day of month
+				var date = new Date();
+				if (date.getDate() == 1) {
+					date.setDate(0);  // start from yesterday  if 1 day of month
+				} else {
+					date.setDate(1);
+				}
+				
 				myRequest({
-					type: "GET",
+					type: 'GET',
 					url : 'https://cpazilla.ru/user/stats',
 					data: {
-						'act' : '',
-						'date_from' : firstDayOfMonth('YYYY-MM-DD'),
-						'date_to' : lastDayOfMonth('YYYY-MM-DD')
+						'act'       : '',
+						'date_from' : echoDate('YYYY-MM-DD', date),
+						'date_to'   : echoDate('YYYY-MM-DD')
 					},
 					success: function(html){
 						
 						//console.log(html);
 						
  						var parser = new DOMParser;
-						var tmpDom = parser.parseFromString(html, "text/html");
+						var tmpDom = parser.parseFromString(html, 'text/html');
 
+
+						var resp = {'month' : 0, 'yesterday' : 0, 'today' : 0};
+						var elems = document.querySelectorAll('#stats_table > tbody > tr');
+						
+						for(var i in elems){
+							if (!elems.hasOwnProperty(i)) continue;
+							
+							var td1 	= elems[i].querySelector('td:first-of-type').innerText;
+							var revenue = elems[i].querySelector('td:last-of-type').innerText;
+
+							//console.log(td1, revenue);
+
+							if (td1 === echoDate('YYYY-MM-DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
+							if (td1 === echoDate('YYYY-MM-DD')) resp.today += parseFloat(revenue.clearCurrency());
+						}
+	
 						var month = tmpDom.querySelector('#stats_table > tfoot > tr > td:nth-child(12) > strong');
 						if (month) {
-							month = parseFloat(month.innerText);
+							resp.month = parseFloat(month.innerText);
 							console.log('month', month);
 						} else {
 							console.log('error parse month');
 						}
-						
-						var pos = tmpDom.querySelectorAll('#stats_table > tbody > tr').length - 1;
-						var yesterday = tmpDom.querySelector('#stats_table > tbody > tr:nth-child('+pos+') > td:nth-child(12)');
-						if (yesterday) {
-							yesterday = parseFloat(yesterday.innerText);
-							console.log('yesterday', yesterday);
-						} else {
-							console.log('error parse yesterday');
+					
+						// compensation first day of month
+						if (new Date().getDate() == 1) {
+							resp.month = resp.today;
 						}
 						
-						var pos = tmpDom.querySelectorAll('#stats_table > tbody > tr').length;
-						var today = tmpDom.querySelector('#stats_table > tbody > tr:nth-child('+pos+') > td:nth-child(12)');
-						if (today) {
-							today = parseFloat(today.innerText);
-							console.log('today', today);
-						} else {
-							console.log('error parse today');
-						}
-						
-						if (typeof calbackFunc == 'function') calbackFunc({
-							'month' : month,
-							'yesterday' : yesterday,
-							'today' : today
-						});
-						delete parser, tmpDom;
+						calbackFunc(resp);
+
 					},
 					fail : function() {
 						console.log('error request 2');

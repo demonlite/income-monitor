@@ -20,7 +20,7 @@ var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.ge
 
 
 // DEBUG !!!
-//var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 
 
