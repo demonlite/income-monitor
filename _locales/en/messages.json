@@ -96,7 +96,7 @@
 		"message": "Rate extension"
 	},
 	"bugreport": {
-		"message": "Feature request and bug report"
+		"message": "GitHub: feature request of bug report"
 	},
 	"sitedescr_loveplanet": {
 		"message": "Affiliate programm of dating site loveplanet.ru. Payment to WebMoney and a Yandex.Money. Minimal - 300 RUR. Referral system."
@@ -116,19 +116,22 @@
 	"sitedescr_trafficshop": {
 		"message": "Popular Exchange buying and selling adult traffic. It works with payment systems: Epassporte, credit card, wire transfer, PayPal and WebMoney."
 	},
+	"sitedescr_juicyads": {
+		"message": "One of the oldest and most well-known affiliate programm to earn money on adult advertising. Supported: Banner, Popunder, mobile redirect. The minimum amount of payment - $$50. Pay on PayPal, Paxum, Payza and a bank card."
+	},
 	"sitedescr_halileo": {
 		"message": "File affiliate program. Paying up to $$25 for 1000 downloads. Registering bonus - $$5. Minimal payout -$$15. Pay to WebMoney and ePayments. Referral program available."
 	},
 	"sitedescr_adsense": {
 		"message": "Most popular contextual advertising program. Payout to wire transfer or sending a check."
 	},
-	"sitedescr_exiclick": {
+	"sitedescr_exoclick": {
 		"message": "One of the most well-known ad networks for adult and entertainment. It works with all types of advertising: banners, popunder, clickunder, IM windows, etc. The minimum payment amount - $$20. Paid through Paypal, Payoneer, Paxum or bank transfer."
 	},
 	"cacheinfo": {
 		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
 	},
 	"note_add_pp": {
-		"message": "Waiting for your suggestions for  adding affiliate programs"
+		"message": "Waiting for your suggestions for adding affiliate programs"
 	}
 }

@@ -11,8 +11,7 @@
 	"browser_action": {
 		"default_icon": "icon19.png",
 		"name": "__MSG_name__",
-		"default_popup": "popup.html",
-		"browser_style": true
+		"default_popup": "popup.html"
 	},
 	"icons": {
 		"128": "icon128.png",

@@ -16,11 +16,11 @@ var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
 var dataCacheTime = 10*60*1000; // Expire time of cached data - 10 minuts
 
+var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+
 
 // DEBUG !!!
-var dataCacheTime = 0; // Expire time of cached data
-
-var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+//var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -154,7 +154,6 @@ function locale() {
 	
 	// print extension version
 	document.getElementsByClassName('ver')[0].innerText = version;
-
 }
 
 
@@ -272,11 +271,8 @@ function fillTable() {
 			// insert into tableBuffer
 			if (roles.indexOf(key) != -1) tableBuffer[hash][key] = result[key];
 		}
-
 		
 		//console.log('tableBuffer', tableBuffer);
-		
-
 		
 		// save in cache
 		if (!fromCache) {
@@ -374,7 +370,9 @@ function fillTable() {
 					var newelem = document.createElement('div');
 					newelem.setAttribute('data-currency', cur);
 					newelem.className = 'total';
-					curElem = document.querySelector('#sitetable tfoot [data-role="'+roles[i]+'"]').appendChild(newelem);
+					var inElem = document.querySelector('#sitetable tfoot [data-role="'+roles[i]+'"]');
+					inElem.innerHTML = '';
+					curElem = inElem.appendChild(newelem);
 				}
 				
 				curElem.innerText = sum[cur].toFixed(symAfretDot);
@@ -384,11 +382,12 @@ function fillTable() {
 	}
 	
 	
-	// remember width. Window has fixed width now
-	setTimeout(function() {
-		document.body.style.width = (document.body.clientWidth) +'px';
-	}, 100);
-	
+	// remember width. Window has fixed width now. Only for non firefox browsers
+	if  (navigator.userAgent.search(/(Firefox)/) <= 0) {
+		setTimeout(function() {
+			document.body.style.width = (document.body.clientWidth) +'px';
+		}, 100);
+	}
 	
 	// Get sites setings from localStorage
 	var sites = (!localStorage.sites) ? [] : JSON.parse(localStorage.sites);
@@ -437,11 +436,10 @@ function fillTable() {
 			
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
-			if (sites[j].sitekey !== 'halileo') continue;
+			if (sites[j].sitekey !== 'cpazilla') continue;
 			
 			// MY DEBUG skip
-			//if ((sites[j].sitekey == 'exoclick') || (sites[j].sitekey == 'trafficshop') || (sites[j].sitekey == 'mamba') || (sites[j].sitekey == 'adsense')) continue;
-			//if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -718,7 +716,7 @@ window.onload = function() {
 
 				$('.sitelist').append(
 					'<div class="line shown">\
-						<img src="'+engine[key].icon+'" />\
+						<img src="'+engine[key].icon+'" alt="" />\
 						<a href="#" class="add_sitename" data-sitekey="'+key+'">'+engine[key].sitename+'</a>\
 						<span class="category">'+engine[key].category+'</span>\
 					</div>'
@@ -732,7 +730,7 @@ window.onload = function() {
 				var sitekey = sites[key].sitekey;
 				$('.dellist').append(
 					'<div class="line shown" data-sitekey="'+sitekey+'">\
-						<img src="'+engine[sitekey].icon+'" />\
+						<img src="'+engine[sitekey].icon+'" alt="" />\
 						<span>'+engine[sitekey].sitename+'</span>\
 						<a href="#" class="delbutton" >&times;</a>\
 					</div>'
