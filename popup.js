@@ -113,18 +113,16 @@ function lastDayOfMonth() {
 function echoDate(template, inDate, tzCorrect) {
 	
 	var date = new Date();
-    var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect;
+    var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect; // 3 - default timezone for Russia
 	
 	if (inDate === 'lastDayThisMonth') 	date.setDate(33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
 	if (inDate === 'firstDayThisMonth')	date.setDate(1);
 	if (inDate === 'yesterday')			date.setDate(date.getDate() - 1);
-
-	//console.log('typeof inDate' , typeof inDate, !!inDate);
 	
 	if (inDate && (typeof inDate === "object")) date = inDate;
 
+	// go to server timezone
 	date.setHours( (date.getHours() + (date.getTimezoneOffset() / 60)) + tzCorrect);
-
 	
 	if (template === 'D') 		return date.getDate(); 
 	if (template === 'DD') 		return ('0' + date.getDate()).slice(-2); 
@@ -892,8 +890,6 @@ window.onload = function() {
 	});
 
 
-	
-	
 
 	// click about
 	$('#abotbutton, #back_about').on('click', function(event) {
@@ -902,11 +898,11 @@ window.onload = function() {
 		
 		var ua = navigator.userAgent;    
 		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';
-		if (ua.search(/(YaBrowser|OPR)/) > 0)  {
-			link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
-		} 
-		document.getElementById('store_url').href = link;
 		
+		if (ua.search(/(YaBrowser|OPR)/) > 0) 	link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
+		if (ua.search(/Firefox/) > 0) 		 	link = 'https://addons.mozilla.org/ru/firefox/addon/income-monitor/';
+
+		document.getElementById('store_url').href = link;
 		switchPanels( $('#page, #about') );
 	});
 }
