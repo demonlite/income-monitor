@@ -91,42 +91,50 @@ function extend2(destination, source) {
 }
 
 
-
+// DEPRECATED / 
 function curDayOfMonth() {
 	var date = new Date();
 	return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 }
 
-// return first day of this month
+// DEPRECATED / return first day of this month
 function firstDayOfMonth(format) {
 	var date = new Date();
 	if (format === 'YYYY-MM-DD') return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-01';
 	if (format === 'DD-MM-YYYY') return '01-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() ;
 }
 
-// return last day of this month
+// DEPRECATED / return last day of this month
 function lastDayOfMonth() {
 	var date = new Date();
 	return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +  (33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
 }
 
-function echoDate(template, inDate) {
+function echoDate(template, inDate, tzCorrect) {
 	
 	var date = new Date();
+    var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect;
 	
 	if (inDate === 'lastDayThisMonth') 	date.setDate(33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
 	if (inDate === 'firstDayThisMonth')	date.setDate(1);
 	if (inDate === 'yesterday')			date.setDate(date.getDate() - 1);
 
-	if (typeof inDate === "object") date = inDate;
+	//console.log('typeof inDate' , typeof inDate, !!inDate);
 	
-	if (template === 'D') return date.getDate(); 
-	if (template === 'DD') return ('0' + date.getDate()).slice(-2); 
-	if (template === 'M') return date.getMonth() + 1; 
-	if (template === 'MM') return ('0' + (date.getMonth() + 1)).slice(-2); 
-	if (template === 'YYYY') return date.getFullYear(); 
-	if (template === 'YYYY-MM-DD') return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2); 
-	if (template === 'YYYY/MM/DD') return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2); 
+	if (inDate && (typeof inDate === "object")) date = inDate;
+
+	date.setHours( (date.getHours() + (date.getTimezoneOffset() / 60)) + tzCorrect);
+
+	
+	if (template === 'D') 		return date.getDate(); 
+	if (template === 'DD') 		return ('0' + date.getDate()).slice(-2); 
+	if (template === 'M') 		return date.getMonth() + 1; 
+	if (template === 'MM') 		return ('0' + (date.getMonth() + 1)).slice(-2); 
+	if (template === 'YYYY') 	return date.getFullYear(); 
+	if (template === 'D.M.YYYY') 		return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(); 
+	if (template === 'YYYY-MM-DD') 		return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2); 
+	if (template === 'YYYY/MM/DD') 		return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2); 
+	if (template === 'YYYY-MM-DD HH:MM:SS') return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ':' + ('0' + (date.getSeconds())).slice(-2); 
 };
 
 
@@ -436,10 +444,11 @@ function fillTable() {
 			
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
-			if (sites[j].sitekey !== 'cpazilla') continue;
+			if (sites[j].sitekey !== 'loveplanet') continue;
+			//if (sites[j].sitekey !== 'cpazilla') continue;
 			
 			// MY DEBUG skip
-			if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			//if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);

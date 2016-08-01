@@ -2,6 +2,7 @@ engine['exoclick'] = {
 	'category' 		: 'adult',				// Site category: dating, teasers, advertising, e.t.c
 	'sitename' 		: 'ExoClick ',			// Visible sitename
 	'currency' 		: 'USD',				// RUR or USD
+	'timezome' 		: -4,					// Server Timezome (hours) 
 	'TSL' 			: true,					// use https?
 	'mainpageUrl' 	: 'https://admin.exoclick.com/login.php',	// for clickable sitename in revenue table
 	'registerUrl' 	: 'https://exoclick.com/',	// Registration page URL
@@ -9,6 +10,10 @@ engine['exoclick'] = {
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		
 		// first day not needed to fix
+		
+		var that = this;
+		
+		console.log(that);
 
 		myRequest({
 			type: 'GET',
@@ -91,12 +96,22 @@ engine['exoclick'] = {
 							}
 						});
 						
-						// first day of month
-						var date = new Date();
+/* 						// first day of month
+						
 						if (date.getDate() == 1) {
 							date.setDate(0);  // start from yesterday
 						} else {
 							date.setDate(1);
+						} */
+						
+						
+						
+						var startDate = new Date();
+						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezome); // comtensation timezone
+						if (echoDate('D', null, that.timezome) === 1) {   // if first day of month
+							startDate.setDate(0);  // start from yesterday (-1 day)
+						} else {
+							startDate.setDate(1);  // start from first day
 						}
 						
 						
@@ -109,8 +124,8 @@ engine['exoclick'] = {
 								'request[stats][filter][]' : 'date',
 								//'request[stats][user]' : 'XXXXX',
 								'request[stats][debug]' : '0',
-								'request[stats][date][from]' : echoDate('YYYY-MM-DD', date), 
-								'request[stats][date][to]'   : echoDate('YYYY-MM-DD'),
+								'request[stats][date][from]' : echoDate('YYYY-MM-DD', startDate, that.timezome), 
+								'request[stats][date][to]'   : echoDate('YYYY-MM-DD', null, that.timezome),
 								'button[text]' : 'Даты',
 								'valuesPicker[graphs][0][id]' : 'sgraph1',
 								'valuesPicker[graphs][0][default]' : 'Revenues',
@@ -167,15 +182,19 @@ engine['exoclick'] = {
 									return;
 								}
 								
+								// yesterday
 								var yesterday = 0;
-								var tdate = new Date();
-								tdate.setDate(tdate.getDate() - 1); // Yes, -2 day, fucked time zones!
+								//var tdate = new Date();
+								//tdate.setDate(tdate.getDate() - 1); // Yes, -2 day, fucked time zones!
 								
 								for(var i in dat.result){
-									if (dat.result[i].ddate === echoDate('YYYY-MM-DD', tdate)) yesterday = dat.result[i].revenue;
+									//if (dat.result[i].ddate === echoDate('YYYY-MM-DD', tdate, that.timezome)) yesterday = dat.result[i].revenue;
+									console.log(dat.result[i].ddate, echoDate('YYYY-MM-DD', 'yesterday', that.timezome));
+									if (dat.result[i].ddate === echoDate('YYYY-MM-DD', 'yesterday', that.timezome)) yesterday = dat.result[i].revenue;
 								}
 								
-								if (typeof calbackFunc == 'function') calbackFunc({'yesterday' : yesterday});
+								
+								calbackFunc({'yesterday' : yesterday});
 							}
 						});
 					
