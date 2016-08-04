@@ -51,7 +51,7 @@ engine['mamba'] = {
 					success: function(html){
 
 						var parser = new DOMParser;
-						var tmpDom = parser.parseFromString(html, "text/html");
+						var tmpDom = parser.parseFromString(html, 'text/html');
 						
 						var elem = tmpDom.querySelector('form [style="color:red"]');
 						if (elem) {

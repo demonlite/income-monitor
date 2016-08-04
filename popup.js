@@ -16,8 +16,8 @@ var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
 var dataCacheTime = 10*60*1000; // Expire time of cached data - 10 minuts
 
-var version = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
-
+var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
 var dataCacheTime = 0; // Expire time of cached data
@@ -63,7 +63,7 @@ Date.prototype.daysInMonth = function() {
 
 // remove from string "$", ","
 String.prototype.clearCurrency = function() {
-	var a = this.replace(/,/, '.').replace(/\$|,|\s|руб\./g, "").trim();
+	var a = this.replace(/,/, '.').replace(/\$|,|\s|⃏|руб\./g, "").trim();
 	if (a.split(/\./).length-1 >= 2) a = a.replace(/\./, '');  // if 2 or more dots - remove first dot
 	return a;
 };
@@ -112,6 +112,8 @@ function lastDayOfMonth() {
 
 function echoDate(template, inDate, tzCorrect) {
 	
+	function two(num) { return ('0' + num).slice(-2);} // insert 0 before
+	
 	var date = new Date();
     var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect; // 3 - default timezone for Russia
 	
@@ -119,20 +121,22 @@ function echoDate(template, inDate, tzCorrect) {
 	if (inDate === 'firstDayThisMonth')	date.setDate(1);
 	if (inDate === 'yesterday')			date.setDate(date.getDate() - 1);
 	
-	if (inDate && (typeof inDate === "object")) date = inDate;
+	if (inDate && (typeof inDate === 'object')) date = inDate;
 
 	// go to server timezone
 	date.setHours( (date.getHours() + (date.getTimezoneOffset() / 60)) + tzCorrect);
 	
 	if (template === 'D') 		return date.getDate(); 
-	if (template === 'DD') 		return ('0' + date.getDate()).slice(-2); 
+	if (template === 'DD') 		return two(date.getDate()); 
 	if (template === 'M') 		return date.getMonth() + 1; 
-	if (template === 'MM') 		return ('0' + (date.getMonth() + 1)).slice(-2); 
+	if (template === 'MM') 		return two(date.getMonth() + 1); 
 	if (template === 'YYYY') 	return date.getFullYear(); 
 	if (template === 'D.M.YYYY') 		return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(); 
-	if (template === 'YYYY-MM-DD') 		return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2); 
-	if (template === 'YYYY/MM/DD') 		return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2); 
-	if (template === 'YYYY-MM-DD HH:MM:SS') return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ':' + ('0' + (date.getSeconds())).slice(-2); 
+	if (template === 'DD-MM-YYYY') 		return two(date.getDate()) + '-' + two(date.getMonth() + 1) + '-' + date.getFullYear(); 
+	if (template === 'DD.MM.YYYY') 		return two(date.getDate()) + '.' + two(date.getMonth() + 1) + '.' + date.getFullYear(); 
+	if (template === 'YYYY-MM-DD') 		return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate());
+	if (template === 'YYYY/MM/DD') 		return date.getFullYear() + '/' + two(date.getMonth() + 1) + '/' + two(date.getDate()); 
+	if (template === 'YYYY-MM-DD HH:MM:SS') return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate()) + ' ' + two(date.getHours()) + ':' + two(date.getMinutes()) + ':' + two(date.getSeconds()); 
 };
 
 
@@ -442,11 +446,11 @@ function fillTable() {
 			
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
-			if (sites[j].sitekey !== 'loveplanet') continue;
-			//if (sites[j].sitekey !== 'cpazilla') continue;
+			//if (sites[j].sitekey !== 'loveplanet') continue;
+			if (sites[j].sitekey !== 'profitraf') continue;
 			
 			// MY DEBUG skip
-			//if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -463,7 +467,7 @@ function fillTable() {
 			
 				console.log('fired getBalance for', sites[j].sitekey);
 				
-				// wrappen need for throw sitekey to procGB
+				// closure wrapper need for throw sitekey to procGB
 				(function() {
 					var login   = sites[j].login;
 					var sitekey = sites[j].sitekey;
@@ -508,12 +512,17 @@ function switchPanels(arr) {
 
 
 
+
+
 // listeners for manage cookies sessions
 // this is not works whis secur cookies and paths - fix if needed
 chrome.webRequest.onBeforeSendHeaders.addListener(
-	function(details) {
-		if (details.tabId !== -1) return; // In sended from Tab - exit;
+	function(details) { 
+
+		//console.log('Before in', details);
 		
+		if (details.tabId !== -1) return; // In sended from Tab - exit;
+
 		// if has no "X-request-afftbl-id" - exit
 		var flag = false;
 		var affId;
@@ -523,24 +532,25 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 				affId = details.requestHeaders[i].value;
 			}
 		}
+		//console.log('X-request-afftbl-id. Return =', !flag, ' affId=', affId);
+		
 		if (!flag) return;
 		
-		//console.log('onBeforeSendHeaders in', details);
 		
 		listenReqId.push(details.requestId); // add requestId to array for answer listener
 		var domain = $('<a>').prop('href', details.url).prop('hostname');
 		
-		// deleting some headers
- 		for (var i = 0; i < details.requestHeaders.length; ++i) {
+ 		// deleting some headers
+   		for (var i = 0; i < details.requestHeaders.length; ++i) {
 			var requestHeader = details.requestHeaders[i];
 			if ( (requestHeader.name === 'X-request-afftbl-id') || (requestHeader.name.toLowerCase() === 'cookie') ) {
 				details.requestHeaders.splice(i, 1);
 				i--;
 			}
 		}
-		
-		
-		// 1. prepare cookies
+
+	
+		// 1. prepare cookies from earle requests
 		var respArr = [];
 		var j = mySession.length;
 		while (j--) {
@@ -550,7 +560,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			}
 		}
 		
-		// 2. add cookies from "addCookieArr"
+		// 2. add cookies from "addCookieArr" (inserted manually)
 		if (addCookieArr[affId]) {
 			var newCookies = addCookieArr[affId];
 			for (var key in newCookies) {
@@ -559,11 +569,14 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		}
 		
 		
+		
 		// 3. insert new cookies
-		details.requestHeaders.push({
-			'name' : 'cookie',
-			'value' : respArr.join('; ')
-		});
+		if (respArr.length) {
+		 	details.requestHeaders.push({
+				'name' : 'Cookie',
+				'value' : respArr.join('; ')
+			});
+		}
 		
 		
 		// modify headers, if needed
@@ -587,13 +600,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			}
 		}
 		
-		console.log('onBeforeSendHeaders out', details);
+		console.log('Before out', details);
 
-        return {
-            requestHeaders: details.requestHeaders
-        };
+        return {requestHeaders: details.requestHeaders};
+		
     }, {
-        urls: [ "*://*/*" ]
+        urls: [ '*://*/*' ]
     }, ['blocking', 'requestHeaders']
 );
 
@@ -601,37 +613,47 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 chrome.webRequest.onHeadersReceived.addListener(
     function (details) {
-
-		if (listenReqId.indexOf(details.requestId) === -1) return;
-		listenReqId.splice(listenReqId.indexOf(details.requestId), 1);
 		
-		//console.log('onHeadersReceived in', details);
+
+		// listen this request or exit?
+		//console.log('listen? ', (listenReqId.indexOf(details.requestId) !== -1));
+		
+		if (listenReqId.indexOf(details.requestId) === -1) return;
+		
+		listenReqId.splice( listenReqId.indexOf(details.requestId), 1);
+		
+		//console.log('Received in', details);
+
 		var domainOrig = $('<a>').prop('href', details.url).prop('hostname');
 		
-        //details.responseHeaders.forEach(function(responseHeader){
-		var i = details.responseHeaders.length;
-		while(i--){
+		for (var i = 0; i < details.responseHeaders.length; ++i) {
 
 			var responseHeader = details.responseHeaders[i];
 			
 			// console.log('work with', responseHeader);
-            if (responseHeader.name.toLowerCase() === "set-cookie") {
-				
+            if (responseHeader.name.toLowerCase() === 'set-cookie') {
+				//console.log('cookie new', responseHeader.value);
  				var bysemi = responseHeader.value.split(';');
 				
-				// try to get domain from cookie
-				var domain = domainOrig; var path = '/';
+				// try to get params from cookie
+				var domain = domainOrig, path = '/', deleteIt = false;
 				for (var j in bysemi) {
 					var byeq = bysemi[j].split('=');
-					if (!byeq[0]) continue;
-					if (byeq[0].trim().toLowerCase() === 'domain') {
-						domain = byeq[1].trim().replace(/^\./, '');  // trim first dot
-					}
 					
-					if (byeq[0].trim().toLowerCase() === 'path') {
-						path = byeq[1].trim();
+					if (!byeq[0]) continue;
+					
+					var nameLo = byeq[0].trim().toLowerCase();
+					var val    = byeq[1].trim();
+					
+					if (nameLo === 'domain') domain = val.replace(/^\./, '');  // trim first dot
+					if (nameLo === 'path')   path   = val;
+					if (nameLo === 'expires') {
+						if (new Date(val) < new Date()) deleteIt = true;
 					}
+
 				}
+				
+				//console.log('cookie new delete', deleteIt);
 				
  				var cookie = responseHeader.value.split(';')[0].trim();
 				var cookieKeyVal = cookie.split('=');
@@ -645,32 +667,40 @@ chrome.webRequest.onHeadersReceived.addListener(
 				};
 				
 				var needInsert = true;
+				
+				// replacing by new one
 				for(var j in mySession) {
 					var oneCookie = mySession[j];
 					if ( (domain === oneCookie.domain) && (cookieKey === oneCookie.name)) {
-						mySession[j] = result;
-						needInsert = false;
+						
+						if (deleteIt) {
+							//console.log('delete', mySession[j]);
+							//delete mySession[j];
+							mySession.splice(j, 1);
+						} else {
+							mySession[j] = result;
+							needInsert = false;
+						}
 					}
 				}
 				
-				if (needInsert) mySession.push(result);
+				if (needInsert && !deleteIt) mySession.push(result);
 				
-				// delete cookie from header - prevent browser to save this cookie
+				// delete all cookie from header - prevent browser to save this cookie
 				details.responseHeaders.splice(i, 1);
-            } 
-        }
+				i--;
+			} 
+		} 
 		
-		console.log('onHeadersReceived out', details);
+		//console.log('mySession', mySession);
+		//console.log('onHeadersReceived out', details);
 		
-        return {
-            responseHeaders: details.responseHeaders
-        };
+        return {responseHeaders: details.responseHeaders};
+		
     }, {
-        urls: ["*://*/*"]
+        urls: [ '*://*/*']
     }, ['blocking','responseHeaders']
 );
-
-
 
 
 
@@ -896,13 +926,13 @@ window.onload = function() {
 		console.log('abotbutton');
 		event.preventDefault();
 		
+		// prepare link for extension store
 		var ua = navigator.userAgent;    
-		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';
-		
+		var link = 'https://chrome.google.com/webstore/detail/income-monitor/ondbcoopdkpnfjemekpkkdlcdillpcpf';  // for chrome
 		if (ua.search(/(YaBrowser|OPR)/) > 0) 	link = 'https://addons.opera.com/ru/extensions/details/income-monitor/';
 		if (ua.search(/Firefox/) > 0) 		 	link = 'https://addons.mozilla.org/ru/firefox/addon/income-monitor/';
-
 		document.getElementById('store_url').href = link;
+		
 		switchPanels( $('#page, #about') );
 	});
 }

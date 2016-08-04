@@ -10,9 +10,12 @@ engine['loveplanet'] = {
 	'icon'			: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABUElEQVR42qWTTygEURzHvU1OtFdHXCiJE8phb2sPnJR/h6VcxE2SktRubdOWi5ubkm2LTW3tAW0xCicyJyc5iCPXDa3Pq9/bXtNgJlOfvm9+7/f97szvzaqmf14qSnPXxHoccWAUYo8lpyN0AOZ2ZAPaYE7XCFDK1zSE9MALm2dWfQSZglvqe9zXWW+zXlVW0wEya+W5sAhrMC+1L6jBM+buxgwwZ5DNCOPoJODJDnhH4iHNaW2BE0JuTEA9pHkJmmEH+gnwTMAdMvCHOQuncClzaCXg0wQMI9e/mPOwD/cQg0nMh40ZSEgf4gWY9YALsteiTwbzrtm0A5JyTDkYlLI+xiv5Zd07g7lop5tXWEEW2OxlXWY9DtPwChfSO8Z+xf94JuAB0R/GB7xBSo7qSPoSmN2g4ZiAqpzCMSzTXKOWYL2lZ8D9+U/TjfRvDLq+Aa//bRG2ovTLAAAAAElFTkSuQmCC',
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		
-		var that = this;
 		
-		// first day ready - just test it
+		// first day  - ready / tested
+		// timezone   - ready / tested
+		
+		
+		var that = this;
 		
 		myRequest({
 			type: 'GET',

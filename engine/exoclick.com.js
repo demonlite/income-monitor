@@ -13,7 +13,7 @@ engine['exoclick'] = {
 		
 		var that = this;
 		
-		console.log(that);
+		//console.log(that);
 
 		myRequest({
 			type: 'GET',
@@ -189,7 +189,7 @@ engine['exoclick'] = {
 								
 								for(var i in dat.result){
 									//if (dat.result[i].ddate === echoDate('YYYY-MM-DD', tdate, that.timezome)) yesterday = dat.result[i].revenue;
-									console.log(dat.result[i].ddate, echoDate('YYYY-MM-DD', 'yesterday', that.timezome));
+									//console.log(dat.result[i].ddate, echoDate('YYYY-MM-DD', 'yesterday', that.timezome));
 									if (dat.result[i].ddate === echoDate('YYYY-MM-DD', 'yesterday', that.timezome)) yesterday = dat.result[i].revenue;
 								}
 								

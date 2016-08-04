@@ -49,7 +49,7 @@ engine['trafficshop'] = {
 						var tmpDom = parser.parseFromString(html, "text/html");
 						
 						var elem = tmpDom.querySelector('form[name="login"] ul li:first-of-type');
-						if (elem && elem.innerText === "Incorrect password or username") {
+						if (elem && elem.innerText === 'Incorrect password or username') {
 							if (typeof calbackFunc == 'function') calbackFunc({'error' : 'INVALID_PASS'});
 							return;
 						}
