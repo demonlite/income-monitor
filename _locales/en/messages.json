@@ -128,6 +128,12 @@
 	"sitedescr_exoclick": {
 		"message": "One of the most well-known ad networks for adult and entertainment. It works with all types of advertising: banners, popunder, clickunder, IM windows, etc. The minimum payment amount - $$20. Paid through Paypal, Payoneer, Paxum or bank transfer."
 	},
+	"sitedescr_mamba": {
+		"message": "Popular russian-language dating site. Pay a percentage of user charges. Payments only to PayPal."
+	},
+	"sitedescr_profitraf": {
+		"message": "Monetize download traffic. Links to download from your site converts so that loader was downloaded first. Loader install the advertiser software (Amigo browser - in particular), and then downloads your file. Work with traffic from Russia and the CIS. Pay 3 to 4,8 WMR for installation. Payments on WebMoney. Registration by invite only!"
+	},
 	"cacheinfo": {
 		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
 	},

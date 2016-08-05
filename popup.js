@@ -17,7 +17,7 @@ var symAfretDot = 2; // Symbols after comma in table
 var dataCacheTime = 10*60*1000; // Expire time of cached data - 10 minuts
 
 var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
-var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
+//var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
 var dataCacheTime = 0; // Expire time of cached data
@@ -447,10 +447,10 @@ function fillTable() {
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
-			if (sites[j].sitekey !== 'profitraf') continue;
+			if (sites[j].sitekey !== 'trafficshop') continue;
 			
 			// MY DEBUG skip
-			if ('juicyads exoclick trafficshop mamba adsense'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			//if ('juicyads exoclick trafficshop mamba adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -640,7 +640,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 				for (var j in bysemi) {
 					var byeq = bysemi[j].split('=');
 					
-					if (!byeq[0]) continue;
+					if (!byeq[0] || !byeq[1]) continue;
 					
 					var nameLo = byeq[0].trim().toLowerCase();
 					var val    = byeq[1].trim();

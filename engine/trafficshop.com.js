@@ -2,11 +2,15 @@ engine['trafficshop'] = {
 	'category' 		: 'adult',				// Site category: dating, teasers, advertising, e.t.c
 	'sitename' 		: 'TrafficShop ',		// Visible sitename
 	'currency' 		: 'USD',				// RUR or USD
+	'timezone' 		: 2,					// Server timezone (hours) 
 	'TSL' 			: true,					// use https?
 	'mainpageUrl' 	: 'https://www.trafficshop.com/',	// for clickable sitename in revenue table
 	'registerUrl' 	: 'https://www.trafficshop.com/',	// Registration page URL
 	'icon'			: 'data:image/gif;base64,R0lGODlhEAAQALMAAPqXLeGlZunq6sjKy1VXV52Fa/zSo/Z3AKmssJCVmfrjyrGbgnd1cfe+f/Z/AP///yH5BAAAAAAALAAAAAAQABAAAARs8MlJn6pzCNmAx1LCPMZhNqA0DEYQNMJWCYOiGB7AEAM1LACH8CAMEBITAQNAFA4BDUbvgSg4rw7iAiFBLLDXQwD5GCzBzrFEyUQ71KEvGlDgrgkBdIAhU+HbAAELPBhmBS4FDAh9MwmOZBQRADs=',
 	'getBalance' 	: function(calbackFunc, login, pass) {
+
+	
+		var that = this;
 		
 		// first day ready
 
@@ -20,7 +24,7 @@ engine['trafficshop'] = {
 			success: function(html){
 
  				var parser = new DOMParser;
-				var tmpDom = parser.parseFromString(html, "text/html");
+				var tmpDom = parser.parseFromString(html, 'text/html');
 				
 				var randr =  tmpDom.querySelector('input[name="r"]');
 				if (randr) {
@@ -32,7 +36,7 @@ engine['trafficshop'] = {
 
 				// Request 2
 				myRequest({
-					type: "POST",
+					type: 'POST',
 					url : 'https://www.trafficshop.com/',
 					data: {
 						'LOG_IN': 1,
@@ -46,7 +50,7 @@ engine['trafficshop'] = {
 						//console.log(html);
 						
 						var parser = new DOMParser;
-						var tmpDom = parser.parseFromString(html, "text/html");
+						var tmpDom = parser.parseFromString(html, 'text/html');
 						
 						var elem = tmpDom.querySelector('form[name="login"] ul li:first-of-type');
 						if (elem && elem.innerText === 'Incorrect password or username') {
@@ -55,15 +59,15 @@ engine['trafficshop'] = {
 						}
 
 						
-						// first day of month
-						var date = new Date();
-						if (date.getDate() == 1) {
-							date.setDate(0);  // start from yesterday  if 1 day of month
+						var startDate = new Date();
+						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
+						if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+							startDate.setDate(0);  // start from yesterday (-1 day)
 						} else {
-							date.setDate(1);
+							startDate.setDate(1);  // start from first day
 						}
 						
-						var postdata = 'period=9&SD=1&SM='+echoDate('M', date)+'&SY='+echoDate('YYYY', date)+'&ED='+echoDate('D')+'&EM='+echoDate('M')+'&EY='+echoDate('YYYY')+'&sel_stat_type=1&x=51&y=12&submit=submit';
+						var postdata = 'period=9&SD=1&SM='+echoDate('M', startDate, that.timezone)+'&SY='+echoDate('YYYY', startDate, that.timezone)+'&ED='+echoDate('D', null, that.timezone)+'&EM='+echoDate('M', null, that.timezone)+'&EY='+echoDate('YYYY', null, that.timezone)+'&sel_stat_type=1&x=51&y=12&submit=submit';
 						var resp = {
 							'month' : 0,
 							'yesterday' : 0,
@@ -83,7 +87,7 @@ engine['trafficshop'] = {
 							success: function(html){
 								
 								var parser = new DOMParser;
-								var tmpDom = parser.parseFromString(html, "text/html");
+								var tmpDom = parser.parseFromString(html, 'text/html');
 								var elems = tmpDom.querySelectorAll('#content > div > table.data > tbody > tr');
 								
 								for(var i in elems){
@@ -93,14 +97,16 @@ engine['trafficshop'] = {
 									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
 									var revenue = elems[i].querySelector('td:last-of-type').innerText;
 									
-									if (td1 === 'Total:') resp.month += parseFloat(revenue.clearCurrency());
-									if (td1 === echoDate('YYYY/MM/DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
-									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
+									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== 1)) {
+										resp.month += parseFloat(revenue.clearCurrency());
+									}
+									if (td1 === echoDate('YYYY/MM/DD', 'yesterday', that.timezone)) resp.yesterday += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD', null, that.timezone)) 		resp.today += parseFloat(revenue.clearCurrency());
 								}
 								
 								// compensation first day of month
-								if (new Date().getDate() == 1) {
-									resp.month = resp.today;
+								if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+									resp.month += resp.today;
 								}
 								
 								if (typeof calbackFunc == 'function') calbackFunc(resp);
@@ -111,7 +117,7 @@ engine['trafficshop'] = {
 						
 						// Request 4 - Popunder stats
 						myRequest({
-							type: "POST",
+							type: 'POST',
 							url : 'https://www.trafficshop.com/publishers/selling_traffic/popunder/?type=4',
 							data: postdata,
 							headers : {
@@ -131,14 +137,16 @@ engine['trafficshop'] = {
 									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
 									var revenue = elems[i].querySelector('td:last-of-type').innerText;
 									
-									if (td1 === 'Total:') resp.month += parseFloat(revenue.clearCurrency());
-									if (td1 === echoDate('YYYY/MM/DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
-									if (td1 === echoDate('YYYY/MM/DD')) resp.today += parseFloat(revenue.clearCurrency());
+									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== 1)) {
+										resp.month += parseFloat(revenue.clearCurrency());
+									}
+									if (td1 === echoDate('YYYY/MM/DD', 'yesterday', that.timezone)) resp.yesterday += parseFloat(revenue.clearCurrency());
+									if (td1 === echoDate('YYYY/MM/DD', null, that.timezone)) 		resp.today += parseFloat(revenue.clearCurrency());
 								}
 								
 								// compensation first day of month
-								if (new Date().getDate() == 1) {
-									resp.month = resp.today;
+								if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+									resp.month += resp.today;
 								}
 								
 								var balance = tmpDom.querySelector('.balance:not(.balance-advertiser) span:nth-child(1)');

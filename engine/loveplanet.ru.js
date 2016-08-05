@@ -3,7 +3,7 @@ engine['loveplanet'] = {
 	'category' 		: 'dating',
 	'sitename' 		: 'LovePlanet', 
 	'currency' 		: 'RUR',
-	'timezome' 		: 3,					// Server Timezome (hours) 
+	'timezone' 		: 3,					// Server timezone (hours) 
 	'TSL' 			: false,					// use https?
 	'mainpageUrl' 	: 'http://lp-partners.ru/',	// for clickable sitename in revenue table
 	'registerUrl' 	: 'http://lp-partners.ru/cgi-bin/pl/affiliates/referral.cgi?id=20732',
@@ -49,8 +49,8 @@ engine['loveplanet'] = {
 					} */
 					
 					var startDate = new Date();
-					startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezome); // comtensation timezone
-					if (echoDate('D', null, that.timezome) === 1) {   // if first day of month
+					startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
+					if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
 						startDate.setDate(0);  // start from yesterday (-1 day)
 					} else {
 						startDate.setDate(1);  // start from first day

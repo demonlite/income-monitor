@@ -2,7 +2,9 @@ engine['juicyads'] = {
 	'category' 		: 'adult',				// Site category: dating, teasers, advertising, e.t.c
 	'sitename' 		: 'JuicyADS',		// Visible sitename
 	'currency' 		: 'USD',				// RUR or USD
+	'timezone' 		: -4,	// or -7?				// Server timezone (hours) 
 	'TSL' 			: true,					// use https?
+	'referalProg'	: true,					// 
 	'mainpageUrl' 	: 'https://manage.juicyads.com/login.php',	// for clickable sitename in revenue table
 	'registerUrl' 	: 'https://manage.juicyads.com/signup.php',	// Registration page URL
 	'icon'			: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAACWElEQVQokY2SW0iUYRCGZ9XCEkRRIcITlGtUVogiURqGtFSEpUSWqEmkZWoZVLpQHlIM8ZDhKtvJQ4haqaChRFp44WHbddeLzIQuWqHdAmuVgm7iqf83SIsumptvBma+mffhlR8r4oPTYeqoNN9MtjWmWY3Z5luZpo7qT/PzK3vk1wOM9zS8vbaBiz5kCMYEmnZzdjVlG1/rd1ietCkNywNKMdJa/O1VN9WRZAq5QlUopd6cE7U0xC4+Kh1vr1sesI30LVSEqX8PFVDqyXWh3pcqoUwo8WTsOjVRH3NDZiyj6oB6THkCmWtJF4qE+5u4406HP60ajO60bKFIQ5qQFzB2Qac0y+zM9EJZGElCtlAsNAn9WibjGA2hyx+DcFXIEo6JPT3Y4XCI5dlDhmvpy6N+KzV+tPozsYvvX/hqZSgcoxc3fKjdTutxKpLNT3tlaqCZ2r0qmXyhXLgrDAWw+Jz3VQx6cFtUSQUaSrQUH5rqbRbLUA/6CBKFU4JeaPSm3YfhaPqFzlDq3SlcYpWi4WS4ZfCxzM3ZHelBZPmRqgiIpCGIGmXPOlWMkrTFoPdSBFC42blzld3+TqU0lh9PxQFeGmlLVNlfFuqCKBEuLR0zUc29I5zeNpq5R6WkoJ21TTj3raG7nBThqKh8jfHkLSVKWRuLQe+M8XgzObFsDVOnwRXnRkYwuYGccONFJfr1ZPtyJYLUMFe0xvTA8LeXrAOd0zo/YjQkhXB+PzlxHAwkSqbj/az9XX946Xe4XJ9NbXXmHJ3tsNaWqDWf0Zla6lwu1z/c+v/xE37wBL71w/gOAAAAAElFTkSuQmCC',
@@ -10,6 +12,7 @@ engine['juicyads'] = {
 		
 
 		var loginCount = 0;
+		var that = this;
 		
 		var firstlogin = function(html) {
 			
@@ -45,9 +48,7 @@ engine['juicyads'] = {
 					success: function(html){
 						
 						console.log('success');
-						// Reply Login
-						
-						
+
 						tryLogin(reallyGetStat);
 						
 					},
@@ -97,24 +98,24 @@ engine['juicyads'] = {
 			
 			console.log('reallyGetStat');
 			
-			// first day of month
-			var date = new Date();
-			if (date.getDate() == 1) {
-				date.setDate(0);  // start from yesterday  if 1 day of month
+			var startDate = new Date();
+			startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
+			if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+				startDate.setDate(0);  // start from yesterday (-1 day)
 			} else {
-				date.setDate(1);
+				startDate.setDate(1);  // start from first day
 			}
 			
 			myRequest({
 				type: 'POST',
 				url : 'https://manage.juicyads.com/admin-stats.php',
  				data: {
-					'span_month_start' : echoDate('MM', date),
+					'span_month_start' : echoDate('MM', startDate, that.timezone),
 					'span_day_start'   : '01',
-					'span_year_start'  : echoDate('YYYY', date),
-					'span_month_end'   : echoDate('MM'),
+					'span_year_start'  : echoDate('YYYY', startDate, that.timezone),
+					'span_month_end'   : echoDate('MM', null, that.timezone),
 					'span_day_end'     : '31',
-					'span_year_end'    : echoDate('YYYY'),
+					'span_year_end'    : echoDate('YYYY', null, that.timezone),
 					'method' : '1',
 					'f15401' : '1',
 					'f15101' : '1',
@@ -125,23 +126,6 @@ engine['juicyads'] = {
 					'f15202' : '1',
 					'f15302' : '1'
 				}, 
-/* 				data: {
-					'span_month_start' : '02',
-					'span_day_start'   : '01',
-					'span_year_start'  : echoDate('YYYY', date),
-					'span_month_end'   : '02',
-					'span_day_end'     : '31',
-					'span_year_end'    : echoDate('YYYY'),
-					'method' : '1',
-					'f15401' : '1',
-					'f15101' : '1',
-					'f15201' : '1',
-					'f15301' : '1',
-					'f15402' : '1',
-					'f15102' : '1',
-					'f15202' : '1',
-					'f15302' : '1'
-				}, */
 				headers : {
 					'Referer': 'https://manage.juicyads.com/',
 					'Origin' : 'https://manage.juicyads.com'
@@ -179,12 +163,12 @@ engine['juicyads'] = {
 /* 						if (td1 === '2016-02-10') resp.yesterday += parseFloat(revenue.clearCurrency());
 						if (td1 === '2016-02-09') resp.today += parseFloat(revenue.clearCurrency()); */
 						
- 						if (td1 === echoDate('YYYY-MM-DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
-						if (td1 === echoDate('YYYY-MM-DD')) resp.today += parseFloat(revenue.clearCurrency());
+ 						if (td1 === echoDate('YYYY-MM-DD', 'yesterday', that.timezone)) resp.yesterday += parseFloat(revenue.clearCurrency());
+						if (td1 === echoDate('YYYY-MM-DD', null, that.timezone)) 		resp.today += parseFloat(revenue.clearCurrency());
 					}
 					
 					// compensation first day of month
-					if (new Date().getDate() == 1) {
+					if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
 						resp.month = resp.today;
 					}
 					
