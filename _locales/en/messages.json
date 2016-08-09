@@ -134,6 +134,9 @@
 	"sitedescr_profitraf": {
 		"message": "Monetize download traffic. Links to download from your site converts so that loader was downloaded first. Loader install the advertiser software (Amigo browser - in particular), and then downloads your file. Work with traffic from Russia and the CIS. Pay 3 to 4,8 WMR for installation. Payments on WebMoney. Registration by invite only!"
 	},
+	"sitedescr_ad1": {
+		"message": "Reliable and well-known CPA network. Many popular offer of bonuses / discounts for client connection cabinets. <span class='nl imp'>Supported by the extension in test mode! If you see an error in displaying statistics - please contact the developer</span>"
+	},
 	"cacheinfo": {
 		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
 	},

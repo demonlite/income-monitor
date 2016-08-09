@@ -24,12 +24,11 @@ engine['mylove'] = {
 				} else {
 					console.log('input[name="muid"] not found. Try without him');
 				}
-				delete parser, tmpDom;
 
 				
 				// Request 2
 				myRequest({
-					type: "POST",
+					type: 'POST',
 					url : 'https://partner.mylove.ru/login/',
 					headers : {
 						'Referer': 'https://partner.mylove.ru/',

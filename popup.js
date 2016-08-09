@@ -52,8 +52,45 @@ function save() {
 
 
 
+var server = {};
+
+// prepare IndexwdDB
+db.open( {
+	server: 'my-app',
+	version: 2,
+	schema: {
+		history_days: {
+			key: { keyPath: ['site', 'login', 'date']},
+			indexes: {
+				mainkey: { keyPath: ['site', 'login', 'date'], unique: true},
+				site : {},
+				login : {},
+				date : {}
+			}
+		}
+	}
+}).then( function (s) {
+	server = s;
+});
 
 
+/* 
+
+
+var toDB = {site : 'cpazilla', login : 'cty', date : 20160620, revenue : 11.15};
+
+server.history_days.add(toDB).then(function(ee) {
+	console.log('db add ok', ee);
+}).catch(function (err) {
+	console.log(err);
+});
+
+
+server.history_days.query('date').bound(20160000, 20169999).execute()
+.then(function(e){
+	console.log('done', e);
+});
+ */
 
 
 // Add to Date
@@ -63,7 +100,7 @@ Date.prototype.daysInMonth = function() {
 
 // remove from string "$", ","
 String.prototype.clearCurrency = function() {
-	var a = this.replace(/,/, '.').replace(/\$|,|\s|⃏|руб\./g, "").trim();
+	var a = this.replace(/,/, '.').replace(/\$|,|\s|⃏|о|руб\./g, '').trim();
 	if (a.split(/\./).length-1 >= 2) a = a.replace(/\./, '');  // if 2 or more dots - remove first dot
 	return a;
 };
@@ -110,9 +147,13 @@ function lastDayOfMonth() {
 	return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +  (33 - new Date(date.getFullYear(), date.getMonth(), 33).getDate());
 }
 
+
+function two(num) { return ('0' + num).slice(-2);} // insert 0 before
+
+
 function echoDate(template, inDate, tzCorrect) {
 	
-	function two(num) { return ('0' + num).slice(-2);} // insert 0 before
+	
 	
 	var date = new Date();
     var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect; // 3 - default timezone for Russia
@@ -256,6 +297,7 @@ function fillTable() {
 		var fromCache = fromCache || false;
 		var roles = 'today yesterday month predic balance'.split(' ');
 		var hash = sitekey + '_#_' +login;
+		var date = new Date();
 		
 		if (result.error) {
 			if (result.error === 'INVALID_PASS') {
@@ -267,19 +309,40 @@ function fillTable() {
 		
 		// prepare tableBuffer
 		if (!tableBuffer[hash]) tableBuffer[hash] = {
-			'month' : '...',
-			'yesterday' : '...',
-			'today' : '...',
-			'balance' : '...'
+			'month'		: 'n/a',
+			'yesterday' : 'n/a',
+			'today' 	: 'n/a',
+			'balance'	: 'n/a'
 		};
 		
 		
+
+		// clearing / buffering / save in indexedDB
 		for (var key in result) {
 			// clear strings values
-			if (typeof result[key] === 'string') if (result[key] !== 'n/a') result[key] = result[key].clearCurrency();
+			if ((typeof result[key] === 'string') && (result[key] !== 'n/a') )  result[key] = result[key].clearCurrency();
 			
 			// insert into tableBuffer
 			if (roles.indexOf(key) != -1) tableBuffer[hash][key] = result[key];
+			
+			
+			// save yesterday revenue into indexedDB (used for charts)
+			if ( (key === 'yesterday') && (result[key] !== 'n/a') )  {
+				var toDB = {
+					site 	 : sitekey, 
+					login 	 : login, 
+					date 	 : parseInt(date.getFullYear() + two(date.getMonth() + 1) + two(date.getDate())), // date as integer like 20160101
+					revenue  : result[key],
+					currency : engine[sitekey].currency
+				};
+
+				server.history_days.add(toDB).then(function(ee) {
+					console.log('db add ok', ee);
+				}).catch(function (err) {
+					// when try to add not unique key "mainkey"
+					console.log('db add err', err);
+				});
+			}
 		}
 		
 		//console.log('tableBuffer', tableBuffer);
@@ -295,7 +358,7 @@ function fillTable() {
 			});
 		}
 		
-		
+
 		
 		// prediction
 		// if not set "result.predic" - calculate by himself
@@ -306,7 +369,7 @@ function fillTable() {
 		
 		// insert numbers into table fields
 		for (var key in result) {
-			var ins = 'n/a';
+			var ins = 'n/a';  //can be 'n/a' (if not available), 'err' (if parse error), or float.
 			var tooltip = '';
 			
 			if (result[key] !== 'n/a') {
@@ -447,10 +510,10 @@ function fillTable() {
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
-			if (sites[j].sitekey !== 'trafficshop') continue;
+			if (sites[j].sitekey !== 'ad1') continue;
 			
 			// MY DEBUG skip
-			//if ('juicyads exoclick trafficshop mamba adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop mamba adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);

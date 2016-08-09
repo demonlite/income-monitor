@@ -672,7 +672,7 @@ td[data-role]:after {
 
 .reqfield {
     padding: 2px 3px 3px;
-    font-size: 1.05em;
+    /* font-size: 1.05em; */
     color: rgb(49, 49, 49);
     background-color: rgb(255, 255, 255);
     width: 184px;
@@ -766,8 +766,8 @@ span.descr-title {
 
 
 .logpas.reqfield {
-    margin: 0 7px 0 0;
-    width: 113px;
+	margin: 0 7px 0 0;
+	width: 36%;
 }
 
 
@@ -889,4 +889,11 @@ ul.links li {
 	font-size: 0.85em;
 }
 
+.nl {
+	display: inline-block;
+	margin: 7px 0 0 0;
+}
 
+.imp {
+	color: red;
+}
