@@ -557,7 +557,7 @@ tfoot tr td {
 td {
 	color: #3c3c3c;
 	padding: 5px 8px 6px;
-	transition: .3s ease-in-out;
+	transition: background .3s ease-in-out;
 	white-space: nowrap;
 	min-width: 68px;
 }
@@ -569,6 +569,11 @@ td[data-role], .total {
 tr.from-cache td, tr.from-cache td[data-role]:after {
 	color: #8f8f90;
 }
+
+.site.error a {
+	color: red;
+}
+
 
 td.site {
 	white-space: nowrap;

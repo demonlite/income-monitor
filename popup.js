@@ -20,7 +20,7 @@ var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.
 //var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
-var dataCacheTime = 0; // Expire time of cached data
+//var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -336,6 +336,8 @@ function fillTable() {
 		
 		date.setDate(date.getDate() - 1);
 		
+		
+		// if error passed
 		if (result.error) {
 			var errMess = 'Some error...';
 			if (result.error === 'INVALID_PASS') errMess = 'Login or Password is incorrect';
@@ -344,6 +346,7 @@ function fillTable() {
 			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td.site');
 			if (el) {
 				el.setAttribute('data-tooltip', 'Error: ' + errMess);
+				el.classList.add('error');
 
 				$(el).darkTooltip({
 					animation: 'flipIn',
@@ -352,7 +355,12 @@ function fillTable() {
 				});
 			}
 			
-			return;
+			//return;
+
+			result.month     = 'err',
+			result.yesterday = 'err',
+			result.today     = 'err',
+			result.balance   = 'err'
 		}
 		
 		
@@ -375,7 +383,7 @@ function fillTable() {
 			
 			
 			// save yesterday revenue into indexedDB (used for charts)
-			if ( (key === 'yesterday') && (result[key] !== 'n/a') )  {
+			if ( !fromCache && (key === 'yesterday') && (result[key] !== 'n/a') )  {
 				var toDB = {
 					site 	 : sitekey, 
 					login 	 : login, 
