@@ -47,13 +47,13 @@ engine['juicyads'] = {
 					},
 					success: function(html){
 						
-						console.log('success');
+						//console.log('success');
 
 						tryLogin(reallyGetStat);
 						
 					},
 					fail: function(html){
-						console.log('fail');
+						//console.log('fail');
 					}
 				});
 				

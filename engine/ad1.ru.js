@@ -48,7 +48,21 @@ engine['ad1'] = {
 					},
 					success: function(html){
 
+						var parser = new DOMParser;
+						var tmpDom = parser.parseFromString(html, 'text/html');
 
+						var balance = tmpDom.querySelector('#currency_RUB');
+						if (balance) {
+							balance = parseFloat(balance.getAttribute('data-balance').clearCurrency());
+							console.log('balance', balance);
+						} else {
+							console.log('error parse balance');
+						}
+						
+						if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance});
+					
+					
+					
 						var startDate = new Date();
 						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
 						if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
@@ -56,6 +70,7 @@ engine['ad1'] = {
 						} else {
 							startDate.setDate(1);  // start from first day
 						}
+						
 						
 						// Request 3
 						myRequest({
@@ -86,12 +101,12 @@ engine['ad1'] = {
 									if (!elems.hasOwnProperty(i)) continue;
 									
 									var td1 	= elems[i]._title;
-									var revenue = elems[i].summ_approved;
+									var revenue = parseFloat(elems[i].summ_approved) + parseFloat(elems[i].summ_pending);
 									
 									//console.log('elem' , td1, revenue);
 									
-									if (td1 === echoDate('DD.MM.YYYY', 'yesterday', that.timezone)) resp.yesterday = parseFloat(revenue);
-									if (td1 === echoDate('DD.MM.YYYY', null, that.timezone)) 		resp.today = parseFloat(revenue);
+									if (td1 === echoDate('DD.MM.YYYY', 'yesterday', that.timezone)) resp.yesterday = revenue;
+									if (td1 === echoDate('DD.MM.YYYY', null, that.timezone)) 		resp.today     = revenue;
 								}
 								
 								// month
@@ -110,7 +125,7 @@ engine['ad1'] = {
 
 
 
-						// Request 4  - balance
+/* 						// Request 4  - balance
 						myRequest({
 							type: 'POST',
 							url : 'http://office.ad1.ru/statistics/ajax/',
@@ -137,7 +152,7 @@ engine['ad1'] = {
 
 								if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance});
 							}
-						});	
+						});	 */
 
 						
 			

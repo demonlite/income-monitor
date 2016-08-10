@@ -257,15 +257,19 @@ function myRequest(opt) {
 	
 	// if headers is set - store it for for inject in request in onBeforeSendHeaders function
 	if (opt.headers) modyfHeadersArr[id] = opt.headers;
-	if (opt.cookies) addCookieArr[id] = opt.cookies;
+	if (opt.cookies) addCookieArr[id]    = opt.cookies;
+	
+	var queryHeaders = {
+		'X-request-afftbl-id' : id  // this header will be removed in onBeforeSendHeaders
+	};
+	
+	if (opt.useBrowserCookies) queryHeaders['X-income-mon-opt-browsercookies'] = 1;
 	
 	$.ajax({
 		type: opt.type,
 		url : opt.url,
 		data: opt.data,
-		headers: {
-			'X-request-afftbl-id' : id  // this header will be removed in onBeforeSendHeaders
-		},
+		headers: queryHeaders,
 		dataType: opt.dataType,
 		success: opt.success
 	}).fail(
@@ -275,6 +279,37 @@ function myRequest(opt) {
 myRequest.counter = 0;
 
 
+// Switching visibiliti 2 panels
+// Parameter: array whith 2 elements
+function switchPanels(arr) {
+	if (arr.length != 2) return;
+	
+	var speed = 200;
+	var first, second;
+	
+	if (arr[0].style.display !== 'none') {
+		first = arr[0];
+		second = arr[1];
+	} else {
+		first = arr[1];
+		second = arr[0];
+	}
+
+	$(first).fadeToggle(speed, 'linear', function() {
+		$(second).fadeToggle(speed);
+	});
+}
+
+
+
+
+var cookieStore = {
+	stor : localStorage.cookieStore ? JSON.parse(localStorage.cookieStore) : {},
+	save : function() {
+		console.log(this);
+		localStorage.cookieStore = JSON.stringify(this.stor);
+	}
+};
 
 function getCacheName(sitekey, login) {
 	var akey = aesjs.util.convertStringToBytes(sitekey + login);
@@ -297,12 +332,26 @@ function fillTable() {
 		var fromCache = fromCache || false;
 		var roles = 'today yesterday month predic balance'.split(' ');
 		var hash = sitekey + '_#_' +login;
-		var date = new Date();
+		var date = new Date(); 
+		
+		date.setDate(date.getDate() - 1);
 		
 		if (result.error) {
-			if (result.error === 'INVALID_PASS') {
-				// WRITE A CODE!
+			var errMess = 'Some error...';
+			if (result.error === 'INVALID_PASS') errMess = 'Login or Password is incorrect';
+			if (result.error === 'NEED_CAPTCHA') errMess = 'Need to enter a CAPTCHA';
+			
+			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td.site');
+			if (el) {
+				el.setAttribute('data-tooltip', 'Error: ' + errMess);
+
+				$(el).darkTooltip({
+					animation: 'flipIn',
+					gravity: 'adaptive',
+					theme: 'my',
+				});
 			}
+			
 			return;
 		}
 		
@@ -316,7 +365,6 @@ function fillTable() {
 		};
 		
 		
-
 		// clearing / buffering / save in indexedDB
 		for (var key in result) {
 			// clear strings values
@@ -379,14 +427,16 @@ function fillTable() {
 				} else {
 					// convert to common currency (if needed)
 					if ( (settings.convcurrency === 'toRUR') && (localStorage.WMZtoWMR) ) {
-						var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+						var curCurrency = engine[sitekey].currency;
 						if (curCurrency === 'USD') {
 							tooltip = ins.toFixed(symAfretDot) + ' $';
 							ins = ins / localStorage.WMZtoWMR;
 						}
 					}
 					if ( (settings.convcurrency === 'toUSD') && (localStorage.WMRtoWMZ) ) {
-						var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+						var curCurrency = engine[sitekey].currency;
 						if (curCurrency === 'RUR') {
 							tooltip = ins.toFixed(symAfretDot) + ' р';
 							ins = ins / localStorage.WMRtoWMZ;
@@ -398,12 +448,13 @@ function fillTable() {
 			
 			if (fromCache) document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"]').classList.add('from-cache');
 			
+			// inserting revenue and tooltip
 			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td[data-role="'+key+'"]');
 			if (el) {
 				el.innerText = ins;
+				if (['n/a', 'err'].indexOf(ins) === -1) el.classList.add('on');
 				if (tooltip) {
 					el.setAttribute('data-tooltip', tooltip);
-
 					$(el).darkTooltip({
 						animation: 'flipIn',
 						gravity: 'adaptive',
@@ -510,10 +561,10 @@ function fillTable() {
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
-			if (sites[j].sitekey !== 'ad1') continue;
+		//	if (sites[j].sitekey !== 'halileo') continue;
 			
 			// MY DEBUG skip
-			if ('juicyads exoclick trafficshop mamba adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -552,52 +603,31 @@ function fillTable() {
 
 
 
-// Switching visibiliti 2 panels
-// Parameter: array whith 2 elements
-function switchPanels(arr) {
-	if (arr.length != 2) return;
-	
-	var speed = 200;
-	var first, second;
-	
-	if (arr[0].style.display !== 'none') {
-		first = arr[0];
-		second = arr[1];
-	} else {
-		first = arr[1];
-		second = arr[0];
-	}
-
-	$(first).fadeToggle(speed, 'linear', function() {
-		$(second).fadeToggle(speed);
-	});
-}
-
-
-
 
 
 // listeners for manage cookies sessions
 // this is not works whis secur cookies and paths - fix if needed
 chrome.webRequest.onBeforeSendHeaders.addListener(
-	function(details) { 
+	function(details) {
 
 		//console.log('Before in', details);
 		
 		if (details.tabId !== -1) return; // In sended from Tab - exit;
 
-		// if has no "X-request-afftbl-id" - exit
-		var flag = false;
-		var affId;
+		//var flag = false;
+		var browserCookie = false;
+		var affId = 0;
 		for (var i = 0; i < details.requestHeaders.length; ++i) {
 			if (details.requestHeaders[i].name === 'X-request-afftbl-id') {
-				flag = true;
 				affId = details.requestHeaders[i].value;
 			}
+			if ( (details.requestHeaders[i].name === 'X-income-mon-opt-browsercookies') && (details.requestHeaders[i].value === '1') ) {
+				browserCookie = true;
+			}
 		}
-		//console.log('X-request-afftbl-id. Return =', !flag, ' affId=', affId);
+		//console.log('browserCookie=', browserCookie);
 		
-		if (!flag) return;
+		if (!affId) return;		// if has no "X-request-afftbl-id" - exit
 		
 		
 		listenReqId.push(details.requestId); // add requestId to array for answer listener
@@ -606,7 +636,53 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
  		// deleting some headers
    		for (var i = 0; i < details.requestHeaders.length; ++i) {
 			var requestHeader = details.requestHeaders[i];
-			if ( (requestHeader.name === 'X-request-afftbl-id') || (requestHeader.name.toLowerCase() === 'cookie') ) {
+			if ( ['X-request-afftbl-id', 'X-income-mon-opt-browsercookies'].indexOf(requestHeader.name) != -1) {
+			//if ( (requestHeader.name === 'X-request-afftbl-id') || (requestHeader.name === 'X-income-mon-opt-browsercookies') ) {
+				details.requestHeaders.splice(i, 1);
+				i--;
+			}
+			
+			// save cookie in cookie storage (mySession) for use in next requests
+			if (browserCookie && (requestHeader.name.toLowerCase() === 'cookie')) {
+				
+				//console.log('broesre coookie', requestHeader.value);
+				
+				
+				var cookies = requestHeader.value.split(';');
+			
+				for (var c in cookies) {
+
+					var cookie = cookies[c];
+					var cookieKeyVal = cookie.split('=');
+					var cookieValue = (cookieKeyVal.length > 2) ? cookieKeyVal.slice(1).join('=') : cookieKeyVal[1]; // for cookies with "=" in value
+					var cookieKey = cookieKeyVal[0].trim();
+					var result = {
+						'name'   : cookieKey,
+						'value'  : cookieValue,
+						'domain' : domain
+					};
+					
+					//console.log('broesre coookie result', result);
+
+					var needInsert = true;
+					
+					// replacing by new one
+					for(var j in mySession) {
+						if ( (domain ===  mySession[j].domain) && (cookieKey ===  mySession[j].name)) {
+							mySession[j] = result;
+							needInsert = false;
+						}
+					}
+					
+					// or inserting
+					if (needInsert) mySession.push(result); 
+				}
+
+				
+
+			}
+			
+			if ( (!browserCookie) && (requestHeader.name.toLowerCase() === 'cookie') ) {
 				details.requestHeaders.splice(i, 1);
 				i--;
 			}
@@ -615,30 +691,77 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 	
 		// 1. prepare cookies from earle requests
 		var respArr = [];
+		var respArrObj = [];
 		var j = mySession.length;
 		while (j--) {
 			var oneCookie = mySession[j];
 			if (domain.indexOf(oneCookie.domain) !== -1) {
 				respArr.push(oneCookie.name + '=' +oneCookie.value);
+				var resp  = {};
+				resp[oneCookie.name] = oneCookie.value;
+				respArrObj.push(resp);
 			}
 		}
 		
-		// 2. add cookies from "addCookieArr" (inserted manually)
+		// 2. add cookies from "addCookieArr" (added manually from myRequest)
 		if (addCookieArr[affId]) {
 			var newCookies = addCookieArr[affId];
 			for (var key in newCookies) {
+				
 				respArr.push(key + '=' + newCookies[key]);
+				
+				// replacing by new one
+				var needInsert = true;
+				for(var y in respArrObj) {
+					if ( respArrObj[y][key] ) {
+						respArrObj[y][key] = newCookies[key];
+						needInsert = false;
+					}
+				}
+				// or inserting
+				if (needInsert) respArrObj.push({key : newCookies[key]});
+				
+				
+ 				console.log('mySession add cookie', key + '=' + newCookies[key] );
+				
+ 				// and insert this cookie in cookie storage (mySession) for use in next request
+				var result = {
+					'name'   : key,
+					'value'  : newCookies[key],
+					'domain' : domain
+				};
+				var needInsert = true;
+				
+				// replacing by new one
+				for(var j in mySession) {
+					if ( (domain ===  mySession[j].domain) && (key ===  mySession[j].name)) {
+						mySession[j] = result;
+						needInsert = false;
+					}
+				}
+				
+				// or inserting
+				if (needInsert) mySession.push(result); 
 			}
 		}
 		
-		
-		
 		// 3. insert new cookies
 		if (respArr.length) {
+			
+			respArr = [];
+			for(var y in respArrObj) {
+				for(var b in respArrObj[y]) {
+					respArr.push(b + '=' + respArrObj[y][b]);
+				}
+			}
+			
+			//console.log('best code', respArr.join('; '));
+			
 		 	details.requestHeaders.push({
 				'name' : 'Cookie',
 				'value' : respArr.join('; ')
-			});
+			}); 
+
 		}
 		
 		
@@ -737,8 +860,6 @@ chrome.webRequest.onHeadersReceived.addListener(
 					if ( (domain === oneCookie.domain) && (cookieKey === oneCookie.name)) {
 						
 						if (deleteIt) {
-							//console.log('delete', mySession[j]);
-							//delete mySession[j];
 							mySession.splice(j, 1);
 						} else {
 							mySession[j] = result;
@@ -767,17 +888,63 @@ chrome.webRequest.onHeadersReceived.addListener(
 
 
 
+
+
+
+
 window.onload = function() {
-	
-	if (localStorage.settings) {
-		settings = JSON.parse(localStorage.settings);
+
+
+	var refreshSitelist = function() {
+		
+		
+		
+		$('.sitelist, .dellist').html('');
+		
+		// prepare sitelist
+		for(var key in engine) {
+			if (!engine.hasOwnProperty(key)) continue;
+			
+			// if site already added - cancel it
+			var escIt = false;
+			for(var si in sites) {
+				if (sites[si].sitekey === key) {
+					escIt = true;
+					continue;
+				}
+			}
+			if (escIt) continue;
+
+			$('.sitelist').append(
+				'<div class="line shown">\
+					<img src="'+engine[key].icon+'" alt="" />\
+					<a href="#" class="add_sitename" data-sitekey="'+key+'">'+engine[key].sitename+'</a>\
+					<span class="category">'+engine[key].category+'</span>\
+				</div>'
+			);
+		}
+
+		// prepare deleting list
+		for(var key in sites) {
+			var sitekey = sites[key].sitekey;
+			$('.dellist').append(
+				'<div class="line shown" data-sitekey="'+sitekey+'">\
+					<img src="'+engine[sitekey].icon+'" alt="" />\
+					<span>'+engine[sitekey].sitename+'</span>\
+					<a href="#" class="delbutton" >&times;</a>\
+				</div>'
+			);
+		}
+		
 	}
+
+
+	if (localStorage.settings) settings = JSON.parse(localStorage.settings);
+
 	
-	// Run main function
-	fillTable(); 
-	
-	// run translating
-	locale();
+	fillTable(); 	// Run main function
+
+	locale();		// run translating
 	
 	// Get sites setings from localStorage
 	var sites = (!localStorage.sites) ? [] : JSON.parse(localStorage.sites);
@@ -794,50 +961,10 @@ window.onload = function() {
 	
 	// click "add site" - prepage sitelist
 	$('#addbutton').on('click', function(event) {
-		console.log('addbutton');
+		//console.log('addbutton');
 		event.preventDefault();
 		
-		// prepare sitelist
-		
-		if ( $('.sitelist >').length == 0) {
-			
-			for(var key in engine) {
-				if (!engine.hasOwnProperty(key)) continue;
-				
-				// if site already added - cancel it
-				var escIt = false;
-				for(var si in sites) {
-					if (sites[si].sitekey === key) {
-						escIt = true;
-						continue;
-					}
-				}
-				if (escIt) continue;
-
-				$('.sitelist').append(
-					'<div class="line shown">\
-						<img src="'+engine[key].icon+'" alt="" />\
-						<a href="#" class="add_sitename" data-sitekey="'+key+'">'+engine[key].sitename+'</a>\
-						<span class="category">'+engine[key].category+'</span>\
-					</div>'
-				);
-			}
-		}
-
-		
-		if ( $('.dellist >').length == 0) {
-			for(var key in sites) {
-				var sitekey = sites[key].sitekey;
-				$('.dellist').append(
-					'<div class="line shown" data-sitekey="'+sitekey+'">\
-						<img src="'+engine[sitekey].icon+'" alt="" />\
-						<span>'+engine[sitekey].sitename+'</span>\
-						<a href="#" class="delbutton" >&times;</a>\
-					</div>'
-				);
-			}
-		}
-		
+		refreshSitelist();
 	});
 	
 	
@@ -869,6 +996,15 @@ window.onload = function() {
 			$('#sitedescr').text(chrome.i18n.getMessage('none'));
 		}
 		
+		// login pass or cookies auth
+		if (engine[sitekey]['authType'] === 'browserCookies') {
+			$('#sitelogin, #sitepass').hide();
+			$('#auth_cookies').show();
+		} else {
+			$('#sitelogin, #sitepass').show();
+			$('#auth_cookies').hide();
+		}
+		
 		$('.gotosite')[0].href = engine[sitekey].registerUrl;
 		
 		$('#add_site').attr('data-sitekey', sitekey);
@@ -887,7 +1023,7 @@ window.onload = function() {
 	// Click Apply Login/pass
 	$('.apply-reqiz').on('click', function(event) {
 		event.preventDefault();
-		console.log('apply-reqiz clicked');
+		//console.log('apply-reqiz clicked');
 		
 		// add new site to array
 		sites.push({
@@ -903,6 +1039,12 @@ window.onload = function() {
 		$('#sitelogin').val('');
 		
 		$('#add_menu, #add_site').toggle(100);
+		
+		refreshSitelist();
+		
+/* 		if (engine[sitekey]['authType'] === 'browserCookies') {
+			// open a site? no?
+		} */
 	});
 	
 	
@@ -941,16 +1083,16 @@ window.onload = function() {
 	});
 	
 	
-	
+	// deleting site
 	$('.dellist').on('click', '.delbutton', function(event) {
-		console.log('delbutton', sites);
+		//console.log('delbutton', sites);
 		
 		var $line = $(this).closest('[data-sitekey]');
 		var key = $line.attr('data-sitekey');
 		
 		for(var si in sites) {
 			if (sites[si].sitekey === key) {
-				console.log('deleded');
+				//console.log('deleded');
 				//delete sites[si];
 				sites.splice(si, 1);
 				$line.fadeOut(200);
@@ -959,6 +1101,10 @@ window.onload = function() {
 		}
 		
 		localStorage.sites = JSON.stringify(sites); // save array
+		
+		setTimeout(function(){
+			refreshSitelist();
+		}, 210);
 	});
 	
 	

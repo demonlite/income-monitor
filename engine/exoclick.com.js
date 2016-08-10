@@ -35,7 +35,7 @@ engine['exoclick'] = {
 					console.log('input[name="csrf_token"] not found. Try without him');
 					randr = '';
 				}
-				delete parser, tmpDom;
+
 
 				// Request 2
 				myRequest({
@@ -93,19 +93,11 @@ engine['exoclick'] = {
 								}
 								
 								if (typeof calbackFunc == 'function') calbackFunc({'balance' : 'n/a', 'today' : today, 'month' : month, 'prediction' : prediction, 'last_month' : last_month});
-								delete parser, tmpDom;
+
 							}
 						});
 						
-/* 						// first day of month
-						
-						if (date.getDate() == 1) {
-							date.setDate(0);  // start from yesterday
-						} else {
-							date.setDate(1);
-						} */
-						
-						
+
 						
 						var startDate = new Date();
 						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
@@ -185,16 +177,10 @@ engine['exoclick'] = {
 								
 								// yesterday
 								var yesterday = 0;
-								//var tdate = new Date();
-								//tdate.setDate(tdate.getDate() - 1); // Yes, -2 day, fucked time zones!
-								
 								for(var i in dat.result){
-									//if (dat.result[i].ddate === echoDate('YYYY-MM-DD', tdate, that.timezone)) yesterday = dat.result[i].revenue;
-									//console.log(dat.result[i].ddate, echoDate('YYYY-MM-DD', 'yesterday', that.timezone));
 									if (dat.result[i].ddate === echoDate('YYYY-MM-DD', 'yesterday', that.timezone)) yesterday = dat.result[i].revenue;
 								}
-								
-								
+
 								calbackFunc({'yesterday' : yesterday});
 							}
 						});

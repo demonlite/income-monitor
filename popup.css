@@ -593,21 +593,23 @@ td[data-role]:after {
 	color: #3c3c3c;
 }
 
-[data-currency="RUR"] td[data-role]:after {
+[data-currency="RUR"] td[data-role].on:after,
+.total[data-currency="RUR"]:after {
 	content: " р";
 }
-[data-currency="USD"] td[data-role]:after {
+[data-currency="USD"] td[data-role].on:after,
+.total[data-currency="USD"]:after {
 	content: " $";
 }
 
-
+/* 
 .total[data-currency="RUR"]:after {
 	content: " р";
 }
 
 .total[data-currency="USD"]:after {
 	content: " $";
-}
+} */
 
 /* end - data table */
 

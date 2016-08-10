@@ -37,7 +37,7 @@ engine['cpazilla'] = {
 				}
 				
 				if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance});
-				delete parser, tmpDom;
+
 				
 				// Request 2
 				

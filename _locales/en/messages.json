@@ -142,5 +142,8 @@
 	},
 	"note_add_pp": {
 		"message": "Waiting for your suggestions for adding affiliate programs"
+	},
+	"auth_cookies": {
+		"message": "To authorize the use of browser cookies. Login to your account in the usual way."
 	}
 }
