@@ -4,12 +4,12 @@
 	"name": "__MSG_name__",
 	"description": "__MSG_description__",
 	"permissions": [ "cookies", "tabs", "notifications", "webRequest",  "webRequestBlocking", "<all_urls>" ],
-	"version": "1.5.1",
+	"version": "1.5.3",
 	"background": {
 		"page": "background.html"
 	},
 	"browser_action": {
-		"default_icon": "icon32.png",
+		"default_icon": "icon19.png",
 		"default_title": "__MSG_name__",
 		"default_popup": "popup.html"
 	},

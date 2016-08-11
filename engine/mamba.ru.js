@@ -14,14 +14,18 @@ engine['mamba'] = {
 			type: 'GET',
 			url : 'https://partner.mamba.ru/login.phtml',
 			headers : {
+				'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 				'Referer': 'https://partner.mamba.ru/login.phtml',
 				'Origin' : 'https://partner.mamba.ru'
 			},
-
+			cookies : {
+				// i not sure what i can use this
+				'mmbTracker' : '1452464929_X2axcc8qwQGb3NCt4N6ttUuGxeZhcCyBnSIK2c6pS41hE6cU5YDJJ5klQCogARBs33OB5fBrnJGvIwjkhLtiC98xLoWB3hBgoosT8pV'
+			},
 			success: function(html){
 
  				var parser = new DOMParser;
-				var tmpDom = parser.parseFromString(html, "text/html");
+				var tmpDom = parser.parseFromString(html, 'text/html');
 				
 				var randr =  tmpDom.querySelector('input[name="s_post"]');
 				if (randr) {
@@ -29,7 +33,7 @@ engine['mamba'] = {
 				} else {
 					console.log('input[name="s_post"] not found. Try without him');
 				}
-
+ 
 				// Request 2
 				myRequest({
 					type: 'POST',
@@ -44,10 +48,10 @@ engine['mamba'] = {
 						'Referer': 'https://partner.mamba.ru/login.phtml',
 						'Origin' : 'https://partner.mamba.ru'
 					},
-					cookies : {
+/* 					cookies : {
 						// i not sure what i can use this
 						'mmbTracker' : '1452464929_X2axcc8qwQGb3NCt4N6ttUuGxeZhcCyBnSIK2c6pS41hE6cU5YDJJ5klQCogARBs33OB5fBrnJGvIwjkhLtiC98xLoWB3hBgoosT8pV'
-					},
+					}, */
 					success: function(html){
 
 						var parser = new DOMParser;

@@ -134,6 +134,9 @@
 	"sitedescr_profitraf": {
 		"message": "Monetize download traffic. Links to download from your site converts so that loader was downloaded first. Loader install the advertiser software (Amigo browser - in particular), and then downloads your file. Work with traffic from Russia and the CIS. Pay 3 to 4,8 WMR for installation. Payments on WebMoney. Registration by invite only!"
 	},
+	"sitedescr_epn": {
+		"message": "Excellent affiliate program online AliExpress stores, Ozone etc. You get 8.5% of the cost of goods sold! There is a large collection of tools, banners, and even ready-made CMS Online Store. Withdrawal of funds at WM, Qiwi, Yandex, ePayments and bank cards."
+	},
 	"sitedescr_ad1": {
 		"message": "Reliable and well-known CPA network. Many popular offer of bonuses / discounts for client connection cabinets. <span class='nl imp'>Supported by the extension in test mode! If you see an error in displaying statistics - please contact the developer</span>"
 	},
@@ -145,5 +148,8 @@
 	},
 	"auth_cookies": {
 		"message": "To authorize the use of browser cookies. Login to your account in the usual way."
+	},
+	"decimal_places": {
+		"message": "Decimal places"
 	}
 }

@@ -23,6 +23,7 @@
     <script src="engine/halileo.com.js"></script>
     <script src="engine/seriouspartner.biz.js"></script>
     <script src="engine/ad1.ru.js"></script>
+    <script src="engine/epn.bz.js"></script>
 </head>
 <body>
 	
@@ -31,6 +32,7 @@
 
 	
 	<div id="page">
+
 		<table id="sitetable">
 			<thead>
 				<th data-lang="site">Site</th>
@@ -45,7 +47,7 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td></td>
+					<td class="site"></td>
 					<td class="login">&nbsp;</td>
 					<td data-role="today">&nbsp;</td>
 					<td data-role="yesterday">&nbsp;</td>
@@ -119,6 +121,12 @@
 				<option value="noconv" data-lang="not_conv">not convert</option>
 				<option value="toRUR" data-lang="to_RUR">To RUR</option>
 				<option value="toUSD" data-lang="to_USD">To USD</option>
+			</select><br />
+			<label data-lang="decimal_places">Decimal places</label><br />
+			<select name="decimal_places" class="reqfield imp0">
+				<option value="0" >0</option>
+				<option value="1" >1</option>
+				<option value="2" >2</option>
 			</select><br />
 			<input type="checkbox" id="hide_login" name="hide_login" value="" /><label for="hide_login" data-lang="hide_login">Hide login column</label><br />
 			<input type="checkbox" id="hide_predic" name="hide_predic" value="" /><label for="hide_predic" data-lang="hide_predic">Hide predic. column</label><br />

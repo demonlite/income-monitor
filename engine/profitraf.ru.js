@@ -6,7 +6,7 @@ engine['profitraf'] = {
 	'timezone' 		:  3,					// Server timezone (hours) 
 	'TSL' 			: false,					// use https?
 	'mainpageUrl' 	: 'http://profitraf.ru/login.pl',	// for clickable sitename in revenue table
-	'registerUrl' 	: 'http://profitraf.ru/login.pl',	// Registration page URL
+	'registerUrl' 	: 'http://profitraf.ru/invite30833',	// Registration page URL
 	'icon'			: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAACJ0lEQVR42jVPTW/TQBTcqvxRLqgIiRPHSqmQOHLggMIFcQZVDRd6SYuoQELQcGlCSuM0TRM7/t4Pr/fLTmzermH1tJo382b2LZLKlGpb6prrLasUV1WhNTcG2kJVXNegSq3K6h+JmNnCBBicvAUZALRSC5BKbUAVZsvlrgsFQ22RHYIAC6iubJgx1GhgWGWAgSDbGoO6PFqr0uW59awTgjq/VHXnt7upGim9dYILU0oY7Z6uuwUKLbn7iTCV3dm90Gn10Y/46DJ6Pop7o03btujNOeqf7ffPAez3hyezAL5k/yBkBcFMmmffw8Nfiax2vVFyOAqbtj3z8d7r4fEsbN0xuiFaISxNrjQV5um3oPczJqY+vEyg2nY38KK9V6cf52CoiTJUaLhRIhTmKivl44vg4Ovq4Iv/5MLvIk/++Ojlp4Hnt02blSoVMiklirmIuImYfPh5+W6awlzTwDotvPxhut57cXwyz8AQFmXCVMQ0CnEZUhGS4tFw+fY3hk2g3TBbp57/oPd+4G0syfiaarjRioh7Qte4WFFu99g1gAPM15j6hIecN45d5dwnAiR0l5W3GV/m4i6ngKHmuHDA3ouULVIO0n1WLFJLops0B2oes0VMvCT3EuYl5DahFsTFPKVz4AHE5CYls4yi64hCTaNsFtNJnF1HBPBNRCwI8STGjklmMZ6GwBA0CbKrMBtv8nFAxhsAyThgjsn+M/kkzK98PI5yaP8C2DmyzIS4mTsAAAAASUVORK5CYII=',
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		

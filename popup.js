@@ -9,7 +9,9 @@ var modyfHeadersArr = {};
 var addCookieArr = {};
 
 var engine = {};
-var settings = {};
+var settings = {
+	decimal_places : 2
+};
 var tableBuffer = {};
 
 var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
@@ -20,10 +22,13 @@ var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.
 //var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
-//var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 
 
+if (localStorage.settings) settings = $.extend(settings, JSON.parse(localStorage.settings));
+
+	
 /* function myEncrypt(pass, text) {
 	var aesCtr = new aesjs.ModeOfOperation.ctr(sha256.pbkdf2(pass, salt, 100, 32), new aesjs.Counter(10));
 	return aesCtr.encrypt(aesjs.util.convertStringToBytes(text));
@@ -210,7 +215,7 @@ function locale() {
 
 // save settings to localStorage
 function saveOptions(data) {
-	//console.log('saveOptions data', data);
+	console.log('saveOptions data', data);
 
 	settings = $.extend(settings, data);
 	localStorage.setItem('settings', JSON.stringify(settings));
@@ -332,9 +337,7 @@ function fillTable() {
 		var fromCache = fromCache || false;
 		var roles = 'today yesterday month predic balance'.split(' ');
 		var hash = sitekey + '_#_' +login;
-		var date = new Date(); 
-		
-		date.setDate(date.getDate() - 1);
+
 		
 		
 		// if error passed
@@ -381,13 +384,15 @@ function fillTable() {
 			// insert into tableBuffer
 			if (roles.indexOf(key) != -1) tableBuffer[hash][key] = result[key];
 			
-			
+			var ydate = new Date(); 
+			ydate.setDate(ydate.getDate() - 1);
+		
 			// save yesterday revenue into indexedDB (used for charts)
-			if ( !fromCache && (key === 'yesterday') && (result[key] !== 'n/a') )  {
+			if ( !fromCache && (key === 'yesterday') && (['n/a', 'err'].indexOf(result[key]) === -1) ) {
 				var toDB = {
 					site 	 : sitekey, 
 					login 	 : login, 
-					date 	 : parseInt(date.getFullYear() + two(date.getMonth() + 1) + two(date.getDate())), // date as integer like 20160101
+					date 	 : parseInt(ydate.getFullYear() + two(ydate.getMonth() + 1) + two(ydate.getDate())), // date as integer like 20160101
 					revenue  : result[key],
 					currency : engine[sitekey].currency
 				};
@@ -404,7 +409,7 @@ function fillTable() {
 		//console.log('tableBuffer', tableBuffer);
 		
 		// save in cache
-		if (!fromCache) {
+		if (!fromCache && !result.error) {
 			var cacheName = getCacheName(sitekey, login);  // prepare key name
 			
 			// save in LS
@@ -428,6 +433,7 @@ function fillTable() {
 			var ins = 'n/a';  //can be 'n/a' (if not available), 'err' (if parse error), or float.
 			var tooltip = '';
 			
+			
 			if (result[key] !== 'n/a') {
 				var ins = parseFloat(result[key]);
 				if (isNaN(ins)) {
@@ -438,7 +444,7 @@ function fillTable() {
 						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
 						var curCurrency = engine[sitekey].currency;
 						if (curCurrency === 'USD') {
-							tooltip = ins.toFixed(symAfretDot) + ' $';
+							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' р'; // if revenue not 0 - prepare tooltip
 							ins = ins / localStorage.WMZtoWMR;
 						}
 					}
@@ -446,11 +452,11 @@ function fillTable() {
 						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
 						var curCurrency = engine[sitekey].currency;
 						if (curCurrency === 'RUR') {
-							tooltip = ins.toFixed(symAfretDot) + ' р';
+							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' р'; // if revenue not 0 - prepare tooltip
 							ins = ins / localStorage.WMRtoWMZ;
 						}
 					}
-					ins = ins.toFixed(symAfretDot);
+					ins = ins.toFixed(settings.decimal_places);
 				}
 			}
 			
@@ -507,7 +513,7 @@ function fillTable() {
 					curElem = inElem.appendChild(newelem);
 				}
 				
-				curElem.innerText = sum[cur].toFixed(symAfretDot);
+				curElem.innerText = sum[cur].toFixed(settings.decimal_places);
 			}
 		}
 		
@@ -569,10 +575,10 @@ function fillTable() {
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
-		//	if (sites[j].sitekey !== 'halileo') continue;
+			if (sites[j].sitekey !== 'cpazilla') continue;
 			
 			// MY DEBUG skip
-			if ('juicyads exoclick trafficshop adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			//if ('juicyads exoclick trafficshop adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -605,11 +611,36 @@ function fillTable() {
 	}
 	
 	
-
 }
 
 
-
+function mySessionAdd(key, val, domain, deleteIt) {
+	
+	deleteIt = (deleteIt === undefined) ? false : deleteIt;
+	
+	// and insert this cookie in cookie storage (mySession) for use in next request
+	var result = {
+		'name'   : key,
+		'value'  : val,
+		'domain' : domain
+	};
+	
+	var needInsert = true;
+	
+	// replacing by new one
+	for(var j in mySession) {
+		if ( (domain ===  mySession[j].domain) && (key ===  mySession[j].name)) {
+			if (deleteIt) {
+				mySession.splice(j, 1);
+			} else {
+				mySession[j] = result;
+				needInsert = false;
+			}
+		}
+	}
+	
+	if (needInsert && !deleteIt) mySession.push(result); // or inserting
+}
 
 
 
@@ -664,29 +695,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 					var cookieKeyVal = cookie.split('=');
 					var cookieValue = (cookieKeyVal.length > 2) ? cookieKeyVal.slice(1).join('=') : cookieKeyVal[1]; // for cookies with "=" in value
 					var cookieKey = cookieKeyVal[0].trim();
-					var result = {
-						'name'   : cookieKey,
-						'value'  : cookieValue,
-						'domain' : domain
-					};
 					
-					//console.log('broesre coookie result', result);
-
-					var needInsert = true;
-					
-					// replacing by new one
-					for(var j in mySession) {
-						if ( (domain ===  mySession[j].domain) && (cookieKey ===  mySession[j].name)) {
-							mySession[j] = result;
-							needInsert = false;
-						}
-					}
-					
-					// or inserting
-					if (needInsert) mySession.push(result); 
+					mySessionAdd(cookieKey, cookieValue, domain);
 				}
-
-				
 
 			}
 			
@@ -698,13 +709,13 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 	
 		// 1. prepare cookies from earle requests
-		var respArr = [];
+		//var respArr = [];
 		var respArrObj = [];
 		var j = mySession.length;
 		while (j--) {
 			var oneCookie = mySession[j];
 			if (domain.indexOf(oneCookie.domain) !== -1) {
-				respArr.push(oneCookie.name + '=' +oneCookie.value);
+				//respArr.push(oneCookie.name + '=' +oneCookie.value);
 				var resp  = {};
 				resp[oneCookie.name] = oneCookie.value;
 				respArrObj.push(resp);
@@ -716,7 +727,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 			var newCookies = addCookieArr[affId];
 			for (var key in newCookies) {
 				
-				respArr.push(key + '=' + newCookies[key]);
+				//respArr.push(key + '=' + newCookies[key]);
 				
 				// replacing by new one
 				var needInsert = true;
@@ -727,36 +738,21 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 					}
 				}
 				// or inserting
-				if (needInsert) respArrObj.push({key : newCookies[key]});
+				var resp  = {};
+				resp[key] = newCookies[key];
+				if (needInsert) respArrObj.push(resp);
 				
+				mySessionAdd(key, newCookies[key], domain);    // and insert this cookie in cookie storage (mySession) for use in next request
 				
- 				console.log('mySession add cookie', key + '=' + newCookies[key] );
-				
- 				// and insert this cookie in cookie storage (mySession) for use in next request
-				var result = {
-					'name'   : key,
-					'value'  : newCookies[key],
-					'domain' : domain
-				};
-				var needInsert = true;
-				
-				// replacing by new one
-				for(var j in mySession) {
-					if ( (domain ===  mySession[j].domain) && (key ===  mySession[j].name)) {
-						mySession[j] = result;
-						needInsert = false;
-					}
-				}
-				
-				// or inserting
-				if (needInsert) mySession.push(result); 
 			}
 		}
 		
 		// 3. insert new cookies
-		if (respArr.length) {
+		if (respArrObj.length) {
 			
-			respArr = [];
+			//console.log('best code 0', respArrObj);
+			
+			var respArr = [];
 			for(var y in respArrObj) {
 				for(var b in respArrObj[y]) {
 					respArr.push(b + '=' + respArrObj[y][b]);
@@ -841,10 +837,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 					
 					if (nameLo === 'domain') domain = val.replace(/^\./, '');  // trim first dot
 					if (nameLo === 'path')   path   = val;
-					if (nameLo === 'expires') {
-						if (new Date(val) < new Date()) deleteIt = true;
-					}
-
+					if ( (nameLo === 'expires') && (new Date(val) < new Date()) ) deleteIt = true;
 				}
 				
 				//console.log('cookie new delete', deleteIt);
@@ -853,30 +846,9 @@ chrome.webRequest.onHeadersReceived.addListener(
 				var cookieKeyVal = cookie.split('=');
 				var cookieValue = (cookieKeyVal.length > 2) ? cookieKeyVal.slice(1).join('=') : cookieKeyVal[1]; // for cookies with "=" in value
 				var cookieKey = cookieKeyVal[0].trim();
-				var result = {
-					'name' : cookieKey,
-					'value' : cookieValue,
-					'domain' : domain,
-					'path' : path,
-				};
 				
-				var needInsert = true;
+				mySessionAdd(cookieKey, cookieValue, domain, deleteIt);
 				
-				// replacing by new one
-				for(var j in mySession) {
-					var oneCookie = mySession[j];
-					if ( (domain === oneCookie.domain) && (cookieKey === oneCookie.name)) {
-						
-						if (deleteIt) {
-							mySession.splice(j, 1);
-						} else {
-							mySession[j] = result;
-							needInsert = false;
-						}
-					}
-				}
-				
-				if (needInsert && !deleteIt) mySession.push(result);
 				
 				// delete all cookie from header - prevent browser to save this cookie
 				details.responseHeaders.splice(i, 1);
@@ -885,7 +857,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 		} 
 		
 		//console.log('mySession', mySession);
-		//console.log('onHeadersReceived out', details);
+		console.log('after out', details);
 		
         return {responseHeaders: details.responseHeaders};
 		
@@ -947,7 +919,7 @@ window.onload = function() {
 	}
 
 
-	if (localStorage.settings) settings = JSON.parse(localStorage.settings);
+	//if (localStorage.settings) settings = JSON.parse(localStorage.settings);
 
 	
 	fillTable(); 	// Run main function
@@ -1121,6 +1093,7 @@ window.onload = function() {
 	$('#hide_login').attr('checked', settings.hide_login);
 	$('#hide_predic').attr('checked', settings.hide_predic);
 	$('[name="convcurrency"]').val(settings.convcurrency);
+	$('[name="decimal_places"]').val(settings.decimal_places);
 	
 	
 	// listen checkboxes on Settings tab
@@ -1130,11 +1103,12 @@ window.onload = function() {
 		saveOptions(myopt);
 	});
 	
-	$('#convcurrency').change(function() {
+	$('[name="convcurrency"], [name="decimal_places"]').change(function() {
 		var myopt = {};
-		myopt[this.id] = this.value;
+		myopt[this.name] = this.value;
 		saveOptions(myopt);
 	});
+
 
 
 

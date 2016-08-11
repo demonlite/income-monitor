@@ -540,16 +540,22 @@ table {
 th {
     font-weight: normal;
     color: #039;
-    border-bottom: 2px solid #6678b1;
     padding: 10px 8px;
-    min-width: 60px;
     font-size: 0.9em;
 }
+
+table#sitetable thead {
+	border-bottom: 2px solid #6678b1;
+}
+
+table#sitetable tfoot {
+	border-top: 2px solid #6678b1;
+}
+
 
 tfoot tr td {
 	text-shadow: 1px 0px 0px rgb(0, 0, 0), 1px 1px 1px rgba(0, 0, 0, 0.28);
 	color: #3a3a3a;
-	border-top: 2px solid #6678b1;
 	padding: 10px 8px;
 	vertical-align: top;
 }
@@ -559,7 +565,6 @@ td {
 	padding: 5px 8px 6px;
 	transition: background .3s ease-in-out;
 	white-space: nowrap;
-	min-width: 68px;
 }
 
 td[data-role], .total {
@@ -575,9 +580,13 @@ tr.from-cache td, tr.from-cache td[data-role]:after {
 }
 
 
-td.site {
+th[data-lang="site"], td.site {
 	white-space: nowrap;
-	min-width: 121px;
+	min-width: 122px;
+}
+
+.stud, [data-role], .login {
+min-width: 72px;
 }
 
 td.login {
@@ -623,9 +632,7 @@ td[data-role]:after {
 	margin: 6px 0 0 0;
 }
 
-.stud {
-	width: 13%;
-}
+
 
 /* .opt-panel {
     text-align: right;
@@ -774,7 +781,7 @@ span.descr-title {
 
 .logpas.reqfield {
 	margin: 0 7px 0 0;
-	width: 36%;
+	width: 35%;
 }
 
 
@@ -904,3 +911,11 @@ ul.links li {
 .imp {
 	color: red;
 }
+
+
+
+table {  border-collapse: collapse; }
+
+ 
+table#sitetable thead, table#sitetable tbody, table#sitetable tfoot { display: block; } 
+table#sitetable tbody { height: 300px; overflow: auto;}
