@@ -105,7 +105,7 @@ Date.prototype.daysInMonth = function() {
 
 // remove from string "$", ","
 String.prototype.clearCurrency = function() {
-	var a = this.replace(/,/, '.').replace(/\$|,|\s|⃏|о|руб\./g, '').trim();
+	var a = this.replace(/,/, '.').replace(/\$|,|\s|⃏|о|a|руб\./g, '').trim();
 	if (a.split(/\./).length-1 >= 2) a = a.replace(/\./, '');  // if 2 or more dots - remove first dot
 	return a;
 };
@@ -157,9 +157,6 @@ function two(num) { return ('0' + num).slice(-2);} // insert 0 before
 
 
 function echoDate(template, inDate, tzCorrect) {
-	
-	
-	
 	var date = new Date();
     var tzCorrect = (tzCorrect === undefined) ? 3 : tzCorrect; // 3 - default timezone for Russia
 	
@@ -575,16 +572,17 @@ function fillTable() {
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
-			if (sites[j].sitekey !== 'cpazilla') continue;
+			//if (sites[j].sitekey !== 'cpazilla') continue;
+			if (sites[j].sitekey !== 'shakes') continue;
 			
 			// MY DEBUG skip
-			//if ('juicyads exoclick trafficshop adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
 			var cacheObj = localStorage[cacheName] ? JSON.parse(localStorage[cacheName]) : {};
 			
-			
+			// get data from cache
 			if ((cacheObj !== undefined) && (+new Date() - cacheObj.datetime < dataCacheTime)) {
 			
 				console.log('From cache!');

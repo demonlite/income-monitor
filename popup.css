@@ -481,7 +481,7 @@ body {
 	font-family: ubuntu, helvetica;
 	font-size: 14px;
 	color: rgb(90, 90, 90);
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.12);
+	/* text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.12); */
 	background-color: rgb(243, 250, 255);
 	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.24), rgba(0, 0, 0, 0.08));
 	-webkit-font-smoothing: antialiased;
@@ -554,7 +554,7 @@ table#sitetable tfoot {
 
 
 tfoot tr td {
-	text-shadow: 1px 0px 0px rgb(0, 0, 0), 1px 1px 1px rgba(0, 0, 0, 0.28);
+	text-shadow: 1px 0px 0px rgb(0, 0, 0); /*  , 1px 1px 1px rgba(0, 0, 0, 0.28) */
 	color: #3a3a3a;
 	padding: 10px 8px;
 	vertical-align: top;
@@ -839,12 +839,12 @@ label {
 .delbutton:hover {
 	text-decoration: none;
 }
+
+
 .delbutton {
 	background-color: #e43f3f;
 	border-radius: 3px;
-	min-height: 12px;
 	display: inline-block;
-	max-height: 18px;
 	text-align: center;
 	font: bold 23px/13px monospace;
 	color: white;
@@ -852,8 +852,8 @@ label {
 	text-shadow: 0px 1px 0 black;
 	margin: 0 13px 0 5px;
 	float: right;
-	padding: 2px 1px 2px 2px;
-	}
+	padding: 2px 3px 3px 2px
+}
 
 
 .wo_tabl {
@@ -918,4 +918,4 @@ table {  border-collapse: collapse; }
 
  
 table#sitetable thead, table#sitetable tbody, table#sitetable tfoot { display: block; } 
-table#sitetable tbody { height: 300px; overflow: auto;}
+table#sitetable tbody { max-height: 300px; overflow: auto;}
