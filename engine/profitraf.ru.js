@@ -18,7 +18,7 @@ engine['profitraf'] = {
 		
 		var startDate = new Date();
 		startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
-		if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+		if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 			startDate.setDate(0);  // start from yesterday (-1 day)
 		} else {
 			startDate.setDate(1);  // start from first day
@@ -81,7 +81,7 @@ engine['profitraf'] = {
 				}
 				
 				// compensation first day of month
-				if (echoDate('D', null, that.timezone) === 1) {
+				if (echoDate('D', null, that.timezone) === '1') {
 					resp.month = resp.today;
 				}
 				

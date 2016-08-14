@@ -65,7 +65,7 @@ engine['ad1'] = {
 					
 						var startDate = new Date();
 						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
-						if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+						if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 							startDate.setDate(0);  // start from yesterday (-1 day)
 						} else {
 							startDate.setDate(1);  // start from first day
@@ -115,7 +115,7 @@ engine['ad1'] = {
 								
 								
 								//compensation first day of month
-								if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+								if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 									resp.month = resp.today;
 								}
 								

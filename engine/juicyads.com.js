@@ -168,7 +168,7 @@ engine['juicyads'] = {
 					}
 					
 					// compensation first day of month
-					if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+					if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 						resp.month = resp.today;
 					}
 					

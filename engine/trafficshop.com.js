@@ -32,7 +32,6 @@ engine['trafficshop'] = {
 				} else {
 					console.log('input[name="r"] not found. Try without him');
 				}
-				delete parser, tmpDom;
 
 				// Request 2
 				myRequest({
@@ -61,7 +60,7 @@ engine['trafficshop'] = {
 						
 						var startDate = new Date();
 						startDate.setHours( (startDate.getHours() + (startDate.getTimezoneOffset() / 60)) + that.timezone); // comtensation timezone
-						if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+						if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 							startDate.setDate(0);  // start from yesterday (-1 day)
 						} else {
 							startDate.setDate(1);  // start from first day
@@ -97,7 +96,7 @@ engine['trafficshop'] = {
 									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
 									var revenue = elems[i].querySelector('td:last-of-type').innerText;
 									
-									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== 1)) {
+									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== '1')) {
 										resp.month += parseFloat(revenue.clearCurrency());
 									}
 									if (td1 === echoDate('YYYY/MM/DD', 'yesterday', that.timezone)) resp.yesterday += parseFloat(revenue.clearCurrency());
@@ -105,7 +104,7 @@ engine['trafficshop'] = {
 								}
 								
 								// compensation first day of month
-								if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+								if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 									resp.month += resp.today;
 								}
 								
@@ -137,7 +136,7 @@ engine['trafficshop'] = {
 									var td1 	= elems[i].querySelector('td:first-of-type').innerText;
 									var revenue = elems[i].querySelector('td:last-of-type').innerText;
 									
-									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== 1)) {
+									if ( (td1 === 'Total:') && (echoDate('D', null, that.timezone) !== '1')) {
 										resp.month += parseFloat(revenue.clearCurrency());
 									}
 									if (td1 === echoDate('YYYY/MM/DD', 'yesterday', that.timezone)) resp.yesterday += parseFloat(revenue.clearCurrency());
@@ -145,7 +144,7 @@ engine['trafficshop'] = {
 								}
 								
 								// compensation first day of month
-								if (echoDate('D', null, that.timezone) === 1) {   // if first day of month
+								if (echoDate('D', null, that.timezone) === '1') {   // if first day of month
 									resp.month += resp.today;
 								}
 								

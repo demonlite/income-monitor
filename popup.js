@@ -169,7 +169,20 @@ function echoDate(template, inDate, tzCorrect) {
 	// go to server timezone
 	date.setHours( (date.getHours() + (date.getTimezoneOffset() / 60)) + tzCorrect);
 	
-	if (template === 'D') 		return date.getDate(); 
+	var result = template;
+	
+
+	result = result.replace('DD', two(date.getDate()) );
+	result = result.replace('D',  date.getDate() );
+	result = result.replace('MM', two(date.getMonth() + 1) );
+	result = result.replace('M',  date.getMonth() + 1 );
+	result = result.replace('YYYY', date.getFullYear() );
+	result = result.replace('HH', two(date.getHours()) );
+	result = result.replace('II', two(date.getMinutes()) );
+	result = result.replace('SS', two(date.getSeconds()) );
+
+	
+/* 	if (template === 'D') 		return date.getDate(); 
 	if (template === 'DD') 		return two(date.getDate()); 
 	if (template === 'M') 		return date.getMonth() + 1; 
 	if (template === 'MM') 		return two(date.getMonth() + 1); 
@@ -178,8 +191,12 @@ function echoDate(template, inDate, tzCorrect) {
 	if (template === 'DD-MM-YYYY') 		return two(date.getDate()) + '-' + two(date.getMonth() + 1) + '-' + date.getFullYear(); 
 	if (template === 'DD.MM.YYYY') 		return two(date.getDate()) + '.' + two(date.getMonth() + 1) + '.' + date.getFullYear(); 
 	if (template === 'YYYY-MM-DD') 		return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate());
+	if (template === 'YYYY.MM.DD') 		return date.getFullYear() + '.' + two(date.getMonth() + 1) + '.' + two(date.getDate());
 	if (template === 'YYYY/MM/DD') 		return date.getFullYear() + '/' + two(date.getMonth() + 1) + '/' + two(date.getDate()); 
 	if (template === 'YYYY-MM-DD HH:MM:SS') return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate()) + ' ' + two(date.getHours()) + ':' + two(date.getMinutes()) + ':' + two(date.getSeconds()); 
+ */
+	
+	return result;
 };
 
 
@@ -573,7 +590,8 @@ function fillTable() {
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
 			//if (sites[j].sitekey !== 'loveplanet') continue;
 			//if (sites[j].sitekey !== 'cpazilla') continue;
-			if (sites[j].sitekey !== 'shakes') continue;
+			//if (sites[j].sitekey !== 'cpagetti') continue;
+			if (sites[j].sitekey !== 'sociate----') continue;
 			
 			// MY DEBUG skip
 			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
