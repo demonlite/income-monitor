@@ -1,6 +1,6 @@
 engine['cpagetti'] = {
 	'category' 		: 'CPA',				// Site category: dating, teasers, advertising, e.t.c
-	'sitename' 		: 'cpagetti',			// Visible sitename
+	'sitename' 		: 'CPAgetti',			// Visible sitename
 	'currency' 		: 'RUR',				// RUR or USD
 	'timezone' 		:  3,					// Server timezone (hours) 
 	'TSL' 			: false,				// use https?

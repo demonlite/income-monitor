@@ -727,7 +727,7 @@ span.category {
 	margin: 3px 0;
 	padding: 2px 3px;
 	min-height: 18px;
-	transition: .3s linear;
+	transition: background .3s linear;
 	cursor: default;
 }
 
@@ -919,3 +919,12 @@ table {  border-collapse: collapse; }
  
 table#sitetable thead, table#sitetable tbody, table#sitetable tfoot { display: block; } 
 table#sitetable tbody { max-height: 300px; overflow: auto;}
+
+
+.drag {
+	cursor:default; z-index:1;
+}
+.dragActive {
+	position:relative;
+	background-color:#c4dbf3;  /* like a :hover line */
+}

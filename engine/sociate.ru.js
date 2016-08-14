@@ -1,6 +1,6 @@
 engine['sociate'] = {
 	'category' 		: 'social',				// Site category: dating, teasers, advertising, e.t.c
-	'sitename' 		: 'sociate',			// Visible sitename
+	'sitename' 		: 'Sociate',			// Visible sitename
 	'currency' 		: 'RUR',				// RUR or USD
 	'timezone' 		:  3,					// Server timezone (hours) 
 	'TSL' 			: true,					// use https?

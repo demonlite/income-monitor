@@ -28,7 +28,65 @@ var dataCacheTime = 0; // Expire time of cached data
 
 if (localStorage.settings) settings = $.extend(settings, JSON.parse(localStorage.settings));
 
-	
+
+
+
+$.fn.draggable = function(callback){
+	function disableSelection(){
+		return false;
+	}
+    $(this).mousedown(function(e){
+		var drag = $(this);
+		var posParentTop = drag.parent().offset().top;
+		var posParentBottom = posParentTop + drag.parent().height();
+		var posOld = drag.offset().top;
+		var posOldCorrection = e.pageY - posOld;
+        drag.addClass('dragActive');
+		var mouseMove = function(e){
+			var posNew = e.pageY - posOldCorrection;
+			if (posNew < posParentTop){
+				if (drag.prev().length > 0 ) {
+					drag.insertBefore(drag.prev().css({'top':-drag.height()}).animate({'top':0}, 100));
+				}
+				drag.offset({'top': posParentTop});
+            } else if (posNew + drag.height() > posParentBottom){
+				if (drag.next().length > 0 ) {
+					drag.insertAfter(drag.next().css({'top':drag.height()}).animate({'top':0}, 100));
+                }
+				drag.offset({'top': posParentBottom - drag.height()});
+            } else {
+				drag.offset({'top': posNew});
+				if (posOld - posNew > drag.height() - 1){
+					drag.insertBefore(drag.prev().css({'top':-drag.height()}).animate({'top':0}, 100));
+					drag.css({'top':0});
+					posOld = drag.offset().top;
+					//posOldCorrection = e.pageY - posOld;
+				} else if (posNew - posOld > drag.height() - 1){
+					drag.insertAfter(drag.next().css({'top':drag.height()}).animate({'top':0}, 100));
+					drag.css({'top':0});
+					posOld = drag.offset().top;
+					//posOldCorrection = e.pageY - posOld;
+				}
+			}
+		};
+		var mouseUp = function(){
+			$(document).off('mousemove', mouseMove).off('mouseup', mouseUp);
+			$(document).off('mousedown', disableSelection);
+            drag.animate({'top':0}, 100, function(){
+				drag.removeClass('dragActive');
+				callback();
+	        });
+        };
+		$(document).on('mousemove', mouseMove).on('mouseup', mouseUp).on('contextmenu', mouseUp);
+		$(document).on('mousedown', disableSelection);
+        $(window).on('blur', mouseUp);
+    });
+};
+
+
+
+
+
 /* function myEncrypt(pass, text) {
 	var aesCtr = new aesjs.ModeOfOperation.ctr(sha256.pbkdf2(pass, salt, 100, 32), new aesjs.Counter(10));
 	return aesCtr.encrypt(aesjs.util.convertStringToBytes(text));
@@ -555,6 +613,17 @@ function fillTable() {
 		$('#sitetable').hide();
 		$('#sitetable').after('<span class="wo_tabl">'+'Нет сайтов для отображения'+'</span>');
 	} else {
+		
+		
+		// Sorting by orber 
+		sites.sort(function(a, b) {
+			var aord = (typeof a.order === 'undefined') ? 0 : a.order;
+			var bord = (typeof b.order === 'undefined') ? 0 : b.order;
+
+			return aord-bord;
+		});
+		
+
 	
 		//add dummi lines into table
 		for(var i in sites) {
@@ -920,17 +989,41 @@ window.onload = function() {
 			);
 		}
 
+		// Sorting by orber 
+		sites.sort(function(a, b) {
+			var aord = (typeof a.order === 'undefined') ? 0 : a.order;
+			var bord = (typeof b.order === 'undefined') ? 0 : b.order;
+
+			return aord-bord;
+		});
+		
+		
 		// prepare deleting list
 		for(var key in sites) {
 			var sitekey = sites[key].sitekey;
 			$('.dellist').append(
-				'<div class="line shown" data-sitekey="'+sitekey+'">\
+				'<div class="line shown" data-sitekey="'+sitekey+'" data-login="'+sites[key].login+'" data-order="'+sites[key].order+'">\
 					<img src="'+engine[sitekey].icon+'" alt="" />\
 					<span>'+engine[sitekey].sitename+'</span>\
 					<a href="#" class="delbutton" >&times;</a>\
 				</div>'
 			);
 		}
+		
+		var callback = function() {
+			console.log('fin');
+
+			for(var i in sites) {
+				var elem = $('.dellist > [data-sitekey="'+sites[i].sitekey+'"][data-login="'+sites[i].login+'"]')[0];
+				sites[i].order = $('.dellist > .line').index(elem) + 1;
+			}
+			localStorage.sites = JSON.stringify(sites);
+		};
+		
+		//$('.dellist').nestable();
+ 		setTimeout(function(){
+			$('.dellist > .line').draggable(callback);
+		}, 200); 
 		
 	}
 

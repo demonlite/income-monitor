@@ -1,6 +1,6 @@
 engine['shakes'] = {
 	'category' 		: 'CPA',				// Site category: dating, teasers, advertising, e.t.c
-	'sitename' 		: 'shakes ',				// Visible sitename
+	'sitename' 		: 'Shakes',				// Visible sitename
 	'currency' 		: 'USD',				// RUR or USD
 	'timezone' 		:  3,					// Server timezone (hours) 
 	'TSL' 			: false,					// use https?

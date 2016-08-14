@@ -1,4 +1,28 @@
+var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
+var verFromBD = localStorage.version;
 
+
+
+// if version updated
+if (verFromBD != version) {
+	
+	console.log('Version update from '+verFromBD+' to '+version);
+
+	if (localStorage.sites) {
+		var sites = JSON.parse(localStorage.sites);
+		for(var i in sites) {
+			if (sites[i].order === undefined) {
+				sites[i].order = i;
+				console.log('updating', i);
+			}
+		}
+		localStorage.sites = JSON.stringify(sites);
+	}
+	
+	
+	
+	localStorage.version = version;
+}
 
 
 
