@@ -22,7 +22,7 @@ var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.
 //var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
-var dataCacheTime = 0; // Expire time of cached data
+//var dataCacheTime = 0; // Expire time of cached data
 
 
 
