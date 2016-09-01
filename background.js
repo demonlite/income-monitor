@@ -59,7 +59,6 @@ window.setTimeout(function() {
 			console.log('error parse WMRtoWMZ');
 		}
 		
-		delete parser, tmpDom;
 		
 		console.log('WMRtoWMZ', WMRtoWMZ);
 		localStorage.setItem('WMRtoWMZ', WMRtoWMZ);
@@ -82,8 +81,6 @@ window.setTimeout(function() {
 		} else {
 			console.log('error parse WMZtoWMR');
 		}
-		
-		delete parser, tmpDom;
 		
 		console.log('WMZtoWMR', WMZtoWMR);
 		localStorage.setItem('WMZtoWMR', WMZtoWMR);

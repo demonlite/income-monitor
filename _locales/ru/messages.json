@@ -97,6 +97,12 @@
 	"bugreport": {
 		"message": "GitHub: ошибки, фичреквесты"
 	},
+	"auten_err": {
+		"message": "Ошибка аутентификации"
+	},
+	"parse_err": {
+		"message": "Ошибка при обработке кода страницы"
+	},
 	"sitedescr_loveplanet": {
 		"message": "Партнерская программа сайта знакомств loveplanet.ru. Выплаты на WebMoney и Yandex.Деньги. Минималка - 300 RUR. Есть реферальная система."
 	},

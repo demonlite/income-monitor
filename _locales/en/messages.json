@@ -98,6 +98,12 @@
 	"bugreport": {
 		"message": "GitHub: feature request of bug report"
 	},
+	"auten_err": {
+		"message": "Authentication error"
+	},
+	"parse_err": {
+		"message": "Parsing error"
+	},
 	"sitedescr_loveplanet": {
 		"message": "Affiliate programm of dating site loveplanet.ru. Payment to WebMoney and a Yandex.Money. Minimal - 300 RUR. Referral system."
 	},

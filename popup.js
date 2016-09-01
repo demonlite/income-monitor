@@ -22,7 +22,7 @@ var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.
 //var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
-//var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -239,21 +239,6 @@ function echoDate(template, inDate, tzCorrect) {
 	result = result.replace('II', two(date.getMinutes()) );
 	result = result.replace('SS', two(date.getSeconds()) );
 
-	
-/* 	if (template === 'D') 		return date.getDate(); 
-	if (template === 'DD') 		return two(date.getDate()); 
-	if (template === 'M') 		return date.getMonth() + 1; 
-	if (template === 'MM') 		return two(date.getMonth() + 1); 
-	if (template === 'YYYY') 	return date.getFullYear(); 
-	if (template === 'D.M.YYYY') 		return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(); 
-	if (template === 'DD-MM-YYYY') 		return two(date.getDate()) + '-' + two(date.getMonth() + 1) + '-' + date.getFullYear(); 
-	if (template === 'DD.MM.YYYY') 		return two(date.getDate()) + '.' + two(date.getMonth() + 1) + '.' + date.getFullYear(); 
-	if (template === 'YYYY-MM-DD') 		return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate());
-	if (template === 'YYYY.MM.DD') 		return date.getFullYear() + '.' + two(date.getMonth() + 1) + '.' + two(date.getDate());
-	if (template === 'YYYY/MM/DD') 		return date.getFullYear() + '/' + two(date.getMonth() + 1) + '/' + two(date.getDate()); 
-	if (template === 'YYYY-MM-DD HH:MM:SS') return date.getFullYear() + '-' + two(date.getMonth() + 1) + '-' + two(date.getDate()) + ' ' + two(date.getHours()) + ':' + two(date.getMinutes()) + ':' + two(date.getSeconds()); 
- */
-	
 	return result;
 };
 
@@ -417,6 +402,8 @@ function fillTable() {
 			var errMess = 'Some error...';
 			if (result.error === 'INVALID_PASS') errMess = 'Login or Password is incorrect';
 			if (result.error === 'NEED_CAPTCHA') errMess = 'Need to enter a CAPTCHA';
+			if (result.error === 'PARSING_ERROR') errMess = chrome.i18n.getMessage('parse_err');
+			if (result.error === 'AUTHENTICATION_ERROR') errMess = chrome.i18n.getMessage('auten_err');
 			
 			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td.site');
 			if (el) {
@@ -660,7 +647,7 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'loveplanet') continue;
 			//if (sites[j].sitekey !== 'cpazilla') continue;
 			//if (sites[j].sitekey !== 'cpagetti') continue;
-			if (sites[j].sitekey !== 'sociate----') continue;
+			if (sites[j].sitekey !== 'vktarget') continue;
 			
 			// MY DEBUG skip
 			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
