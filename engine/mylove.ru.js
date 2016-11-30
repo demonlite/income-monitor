@@ -49,16 +49,14 @@ engine['mylove'] = {
 						
 						var balance = tmpDom.querySelector('#inheader > div > a:nth-child(3) > span');
 						if (balance) {
-							balance = parseFloat(balance.innerText);
+							balance = balance.innerText;
 						} else {
 							console.log('error parse balance');
 						}
 						
 						if (typeof calbackFunc == 'function') calbackFunc({'balance' : balance});
 						
-						delete parser, tmpDom;
-						
-						
+
 						
 						// Request 3
 						myRequest({

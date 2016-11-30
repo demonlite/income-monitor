@@ -67,7 +67,7 @@ engine['seriouspartner'] = {
 
 								var balance = tmpDom.querySelector('.balance');
 								if (balance) {
-									balance = parseFloat(balance.innerText);
+									balance = balance.innerText;
 								} else {
 									console.log('error parse balance');
 								}

@@ -261,6 +261,10 @@ span.category {
 	border-radius: 3px;
 }
 
+.dellist .line {
+    cursor: move;
+}
+
 .frm {
 	margin: 8px 0 10px 0;
 	padding: 8px 7px;
