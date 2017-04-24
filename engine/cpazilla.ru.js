@@ -66,7 +66,9 @@ engine['cpazilla'] = {
 
 
 						var resp = {'month' : 0, 'yesterday' : 0, 'today' : 0};
-						var elems = document.querySelectorAll('#stats_table > tbody > tr');
+						var elems = tmpDom.querySelectorAll('#stats_table > tbody > tr');
+						
+						//console.log('elems', elems);
 						
 						for(var i in elems){
 							if (!elems.hasOwnProperty(i)) continue;
@@ -74,15 +76,15 @@ engine['cpazilla'] = {
 							var td1 	= elems[i].querySelector('td:first-of-type').innerText;
 							var revenue = elems[i].querySelector('td:last-of-type').innerText;
 
-							//console.log(td1, revenue);
+							//console.log('rev', td1, revenue);
 
-							if (td1 === echoDate('YYYY-MM-DD', 'yesterday')) resp.yesterday += parseFloat(revenue.clearCurrency());
-							if (td1 === echoDate('YYYY-MM-DD')) resp.today += parseFloat(revenue.clearCurrency());
+							if (td1 === echoDate('YYYY-MM-DD', 'yesterday')) resp.yesterday += revenue.clearCurrency();
+							if (td1 === echoDate('YYYY-MM-DD'))              resp.today     += revenue.clearCurrency();
 						}
 	
 						var month = tmpDom.querySelector('#stats_table > tfoot > tr > td:nth-child(12) > strong');
 						if (month) {
-							resp.month = parseFloat(month.innerText);
+							resp.month = month.innerText;
 							console.log('month', month);
 						} else {
 							console.log('error parse month');

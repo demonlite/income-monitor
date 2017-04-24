@@ -11,7 +11,7 @@ engine['bongacash'] = {
 		
 
 		myRequest({
-			type: "POST",
+			type: 'POST',
 			url : 'https://bongacash.com/login',
 			data: 'log_in%5Busername%5D='+login+'&log_in%5Bpassword%5D='+pass+'&log_in%5Bremember%5D=on',
 			success: function(html){
@@ -37,7 +37,6 @@ engine['bongacash'] = {
 					return;
 				}
 				
-				delete parser, tmpDom;
 				
 				if (new Date().getDate() == 1) {
 					// start from yesterday (30 or 31 of last month)

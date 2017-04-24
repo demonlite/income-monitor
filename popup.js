@@ -16,13 +16,12 @@ var tableBuffer = {};
 
 var salt = 'fc9a5b4e1c0cce50ad8008cfd205784f';
 var symAfretDot = 2; // Symbols after comma in table
-var dataCacheTime = 10*60*1000; // Expire time of cached data - 10 minuts
+var dataCacheTime = 15*60*1000; // Expire time of cached data - 15 minuts
 
 var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
-//var myBrowser = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser : chrome;
 
 // DEBUG !!!
-var dataCacheTime = 0; // Expire time of cached data
+//var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -228,7 +227,6 @@ function echoDate(template, inDate, tzCorrect) {
 	date.setHours( (date.getHours() + (date.getTimezoneOffset() / 60)) + tzCorrect);
 	
 	var result = template;
-	
 
 	result = result.replace('DD', two(date.getDate()) );
 	result = result.replace('D',  date.getDate() );
@@ -648,9 +646,10 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'cpazilla') continue;
 			//if (sites[j].sitekey !== 'cpagetti') continue;
 			//if (sites[j].sitekey !== 'seriouspartner') continue;
+			//if (sites[j].sitekey !== 'redpays') continue;
 			
 			// MY DEBUG skip
-			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			//if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);
@@ -658,11 +657,8 @@ function fillTable() {
 			
 			// get data from cache
 			if ((cacheObj !== undefined) && (+new Date() - cacheObj.datetime < dataCacheTime)) {
-			
 				console.log('From cache!');
-				
 				procGB(cacheObj.data, sites[j].sitekey, sites[j].login, true);
-			
 			} else {
 			
 				console.log('fired getBalance for', sites[j].sitekey);

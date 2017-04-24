@@ -27,8 +27,13 @@ engine['vktarget'] = {
 				var parser = new DOMParser;
 				var tmpDom = parser.parseFromString(html, 'text/html');
 				
-				var vkn = tmpDom.documentElement.nextSibling.nodeValue.match(/magicbox(.*)magicbox/)[1];
-
+				
+				var match = tmpDom.documentElement.innerHTML.match('magicbox(.*?)magicbox');
+				if (match[1]) {
+					var vkn = match[1];
+				} else {
+					var vkn = tmpDom.documentElement.nextSibling.nodeValue.match(/magicbox(.*)magicbox/)[1];
+				}
 			
  				// Request 2
 				myRequest({
