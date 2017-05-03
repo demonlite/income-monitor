@@ -11,8 +11,10 @@ engine['vktarget'] = {
 	
 		// not tested on live account 
 		// not tested on first day of month
-	
+		
 		var that = this;
+	
+
 
 		// Request 1
 		myRequest({
@@ -34,54 +36,73 @@ engine['vktarget'] = {
 				} else {
 					var vkn = tmpDom.documentElement.nextSibling.nodeValue.match(/magicbox(.*)magicbox/)[1];
 				}
-			
- 				// Request 2
+				
+				console.log(that.sitename, 'vkn', vkn);
+				
+				// Request 2
+				// хитрожопая защита. Обязательно загрузить картинку перед авторизацией. Хитро :). Четыре часа времени потратил.
 				myRequest({
-					type: 'POST',
-					url : 'https://vktarget.ru/api/all.php',
-					data: {
-						'action' : 'auth',
-						'email' 	: login,
-						'password' 	: pass,
-						'js_on' 		: new Date().getFullYear(),
-						'timezone_diff' : new Date().getTimezoneOffset(),
-						'recaptcha' : '',
-						'x':1240,
-						'y':359
-					},
+					type: 'GET',
+					url : 'https://vktarget.ru/img/vkt-logo-footer.jpg',
 					headers : {
-						
 						'Referer':'https://vktarget.ru/',
-						'Origin' :'https://vktarget.ru',
-						'VKN' : vkn,
-						'X-Requested-With' : 'XMLHttpRequest'
+						'Origin' :'https://vktarget.ru'
 					},
 					success: function(html){
 						
-						if (html) {
-							var json = JSON.parse(html);
-							
-							if (json.desc === 'Authorization failed') {
-								calbackFunc({'error' : 'AUTHENTICATION_ERROR'});
-								return;
-							}			
-							
-							if (json.balance !== undefined) {
-								calbackFunc({'balance' : json.balance});
+						
+						// Request 3 - авторизация
+						myRequest({
+							type: 'POST',
+							url : 'https://vktarget.ru/api/all.php',
+							dataType : 'json',
+							data: {
+								'action' : 'auth',
+								'email' 	: login,
+								'password' 	: pass,
+								'js_on' 		: new Date().getFullYear(),
+								'timezone_diff' : new Date().getTimezoneOffset(),
+								'recaptcha' : '',
+								'x':1235,
+								'y':369
+							},
+							headers : {
+								'Referer':'https://vktarget.ru/',
+								'Origin' :'https://vktarget.ru',
+								'VKN' : vkn,
+								'X-Requested-With' : 'XMLHttpRequest'
+							},
+							success: function(html){
+								
+								if (html) {
+									var json = html;
+									
+									if (json.desc === 'Authorization failed') {
+										calbackFunc({'error' : 'AUTHENTICATION_ERROR'});
+										return;
+									}
+									
+									if (json.balance !== undefined) {
+										calbackFunc({'balance' : json.balance});
+									}
+									
+									
+								}
+								
 							}
-							
-							
-						}
+						});
+						
 						
 					}
-				});			
-			
+				});
 
 
 			}
 			
 			
-		});	
+		});
+		
+		
 
 		
 

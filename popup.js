@@ -646,7 +646,7 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'cpazilla') continue;
 			//if (sites[j].sitekey !== 'cpagetti') continue;
 			//if (sites[j].sitekey !== 'seriouspartner') continue;
-			//if (sites[j].sitekey !== 'redpays') continue;
+			//if (sites[j].sitekey !== 'vktarget') continue;
 			
 			// MY DEBUG skip
 			//if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
