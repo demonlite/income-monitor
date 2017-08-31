@@ -40,12 +40,15 @@ if (!localStorage.settings) localStorage.setItem('settings', JSON.stringify(defS
 if (!localStorage.WMZtoWMR) localStorage.setItem('WMZtoWMR', 0)
 if (!localStorage.WMRtoWMZ) localStorage.setItem('WMRtoWMZ', 0);
 
+if (!localStorage.WMEtoWMZ) localStorage.setItem('WMEtoWMZ', 0);
+if (!localStorage.WMEtoWMR) localStorage.setItem('WMEtoWMR', 0);
+
 // Get exchange course
 window.setTimeout(function() {
 
  	$.ajax({
-		type: "POST",
-		url: "https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=2",
+		type: 'POST',
+		url: 'https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=2',
 		dataType: 'html'
 	}).done(function( html ) {
 		
@@ -67,8 +70,8 @@ window.setTimeout(function() {
 	
 	
 	$.ajax({
-		type: "GET",
-		url: "https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=1",
+		type: 'GET',
+		url: 'https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=1',
 		dataType: 'html'
 	}).done(function( html ) {
 		
@@ -84,6 +87,51 @@ window.setTimeout(function() {
 		
 		console.log('WMZtoWMR', WMZtoWMR);
 		localStorage.setItem('WMZtoWMR', WMZtoWMR);
+	});	
+	
+	
+	
+	// EURO 
+	
+	$.ajax({
+		type: 'GET',
+		url: 'https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=5',
+		dataType: 'html'
+	}).done(function( html ) {
+		
+		var parser = new DOMParser;
+		var tmpDom = parser.parseFromString(html, "text/xml");
+		
+		var WMEtoWMR = tmpDom.querySelector('WMExchnagerQuerys query:first-of-type');
+		if (WMEtoWMR) {
+			WMEtoWMR = parseFloat(WMEtoWMR.getAttribute('outinrate').replace(',', '.')); 
+		} else {
+			console.log('error parse WMEtoWMR');
+		}
+		
+		console.log('WMEtoWMR', WMEtoWMR);
+		localStorage.setItem('WMEtoWMR', WMEtoWMR);
+	});
+	
+	
+	$.ajax({
+		type: 'GET',
+		url: 'https://wmeng.exchanger.ru/asp/XMLWMList.asp?exchtype=4',
+		dataType: 'html'
+	}).done(function( html ) {
+		
+		var parser = new DOMParser;
+		var tmpDom = parser.parseFromString(html, "text/xml");
+		
+		var WMEtoWMZ = tmpDom.querySelector('WMExchnagerQuerys query:first-of-type');
+		if (WMEtoWMZ) {
+			WMEtoWMZ = 1 / parseFloat(WMEtoWMZ.getAttribute('outinrate').replace(',', '.')); 
+		} else {
+			console.log('error parse WMEtoWMZ');
+		}
+		
+		console.log('WMEtoWMZ', WMEtoWMZ);
+		localStorage.setItem('WMEtoWMZ', WMEtoWMZ);
 	});
 	
 }, 4*1000);

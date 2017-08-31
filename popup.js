@@ -21,7 +21,7 @@ var dataCacheTime = 15*60*1000; // Expire time of cached data - 15 minuts
 var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
 
 // DEBUG !!!
-//var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -424,6 +424,7 @@ function fillTable() {
 		}
 		
 		
+		
 		// prepare tableBuffer
 		if (!tableBuffer[hash]) tableBuffer[hash] = {
 			'month'		: 'n/a',
@@ -497,20 +498,21 @@ function fillTable() {
 					ins = 'err';
 				} else {
 					// convert to common currency (if needed)
-					if ( (settings.convcurrency === 'toRUR') && (localStorage.WMZtoWMR) ) {
-						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+					if (settings.convcurrency === 'toRUR') {
 						var curCurrency = engine[sitekey].currency;
-						if (curCurrency === 'USD') {
-							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' р'; // if revenue not 0 - prepare tooltip
-							ins = ins / localStorage.WMZtoWMR;
+						if (['USD', 'EUR'].indexOf(curCurrency) !== -1) {
+							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' ' + curCurrency; // if revenue not 0 - prepare tooltip
+							if (curCurrency === 'USD') ins = ins / localStorage.WMZtoWMR;
+							if (curCurrency === 'EUR') ins = ins / localStorage.WMEtoWMR;
 						}
 					}
-					if ( (settings.convcurrency === 'toUSD') && (localStorage.WMRtoWMZ) ) {
-						//var curCurrency = document.querySelector('tr[data-key="'+sitekey+'"]').getAttribute('data-currencyOrig');
+					
+					if (settings.convcurrency === 'toUSD') {
 						var curCurrency = engine[sitekey].currency;
-						if (curCurrency === 'RUR') {
-							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' р'; // if revenue not 0 - prepare tooltip
-							ins = ins / localStorage.WMRtoWMZ;
+						if (['RUR', 'EUR'].indexOf(curCurrency) !== -1) {
+							if (ins) tooltip = ins.toFixed(settings.decimal_places) + ' ' + curCurrency; // if revenue not 0 - prepare tooltip
+							if (curCurrency === 'RUR') ins = ins / localStorage.WMRtoWMZ;
+							if (curCurrency === 'EUR') ins = ins / localStorage.WMEtoWMZ;
 						}
 					}
 					ins = ins.toFixed(settings.decimal_places);
@@ -543,7 +545,8 @@ function fillTable() {
 			var elems = document.querySelectorAll('#sitetable tbody [data-role="'+roles[i]+'"]');
 			var sum = {
 				USD : 0,
-				RUR : 0
+				RUR : 0,
+				EUR : 0
 			};
 			
 			// enumerate TDs in columns
@@ -604,12 +607,10 @@ function fillTable() {
 		sites.sort(function(a, b) {
 			var aord = (typeof a.order === 'undefined') ? 0 : a.order;
 			var bord = (typeof b.order === 'undefined') ? 0 : b.order;
-
 			return aord-bord;
 		});
-		
 
-	
+		
 		//add dummi lines into table
 		for(var i in sites) {
 			try {
@@ -620,8 +621,8 @@ function fillTable() {
 			}
 			var sitekey = sites[i].sitekey;
 			var useCurrency = engine[sitekey].currency;
-			if ( (settings.convcurrency === 'toRUR') && (localStorage.WMZtoWMR) ) var useCurrency = 'RUR';
-			if ( (settings.convcurrency === 'toUSD') && (localStorage.WMRtoWMZ) ) var useCurrency = 'USD';
+			if (settings.convcurrency === 'toRUR') var useCurrency = 'RUR';
+			if (settings.convcurrency === 'toUSD') var useCurrency = 'USD';
 
 			$('#sitetable tbody').append('<tr data-key="'+sites[i].sitekey+'" data-login="'+sites[i].login+'" data-currency="'+useCurrency+'" data-currencyOrig="'+engine[sitekey].currency+'">\
 				<td class="site">\
@@ -646,10 +647,10 @@ function fillTable() {
 			//if (sites[j].sitekey !== 'cpazilla') continue;
 			//if (sites[j].sitekey !== 'cpagetti') continue;
 			//if (sites[j].sitekey !== 'seriouspartner') continue;
-			//if (sites[j].sitekey !== 'vktarget') continue;
+			//if (sites[j].sitekey !== 'badoo') continue;
 			
 			// MY DEBUG skip
-			//if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
+			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
 			
 			// check the cache
 			var cacheName = getCacheName(sites[j].sitekey, sites[j].login);

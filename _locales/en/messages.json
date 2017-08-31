@@ -152,6 +152,9 @@
 	"sitedescr_redpays": {
 		"message": "Partner of one of the most popular adult dating sites. Payments in WMR up to 85% of earnings from the attracted user."
 	},
+	"sitedescr_badoo": {
+		"message": "Affiliate program of the international dating site badoo: A large project, good monetization of dating traffic. Payments only to PayPal and the Bank account."
+	},
 	"cacheinfo": {
 		"message": "Important: The data in the table are cached for 10 minutes. Cached data is displayed in gray."
 	},
