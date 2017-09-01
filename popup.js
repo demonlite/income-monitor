@@ -21,7 +21,7 @@ var dataCacheTime = 15*60*1000; // Expire time of cached data - 15 minuts
 var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
 
 // DEBUG !!!
-var dataCacheTime = 0; // Expire time of cached data
+// var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -1019,7 +1019,7 @@ window.onload = function() {
 
 	locale();		// run translating
 	
-	// Get sites setings from localStorage
+	// Get sites settings from localStorage
 	var sites = (!localStorage.sites) ? [] : JSON.parse(localStorage.sites);
 	
 	
@@ -1188,6 +1188,8 @@ window.onload = function() {
 	$('[name="convcurrency"]').val(settings.convcurrency);
 	$('[name="decimal_places"]').val(settings.decimal_places);
 	
+	// current exchange rate
+	$('.exchrate').text('1$ = ' + parseFloat(localStorage.WMRtoWMZ).toFixed(2) + 'р');
 	
 	// listen checkboxes on Settings tab
 	$( '#hide_login, #hide_predic' ).change(function() {

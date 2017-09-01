@@ -57,7 +57,6 @@ engine['badoo'] = {
 						'Origin' :'https://partner.badoo.com',
 					},
 					success: function(html){
-
 						
 						// Request 3 - статистика
 						myRequest({
@@ -72,17 +71,17 @@ engine['badoo'] = {
 								
 								var parser = new DOMParser;
 								var tmpDom = parser.parseFromString(html, 'text/html');
-								
+
 								var resp = {};
 
-								resp.today     = tmpDom.querySelector('.cwrap table > tbody > tr:nth-child('+echoDate('D')+') > td:nth-child(3)').innerText;
+								resp.today     = tmpDom.querySelector('.cwrap table.summary_table > tbody > tr:nth-child('+echoDate('D')+') > td:nth-child(3)').innerText;
 								resp.month     = tmpDom.querySelector('tfoot.ext_info > tr.tr_income > td:nth-child(2)').innerText;
 
 								// compensation first day of month
 								if (new Date().getDate() == 1) {
 									resp.yesterday = 'n/a';
 								} else {
-									resp.yesterday  = tmpDom.querySelector('.cwrap table > tbody > tr:nth-child('+echoDate('D', 'yesterday')+') > td:nth-child(3)').innerText;
+									resp.yesterday  = tmpDom.querySelector('.cwrap table.summary_table > tbody > tr:nth-child('+echoDate('D', 'yesterday')+') > td:nth-child(3)').innerText;
 								}
 								
 								calbackFunc(resp);
@@ -115,8 +114,6 @@ engine['badoo'] = {
 									calbackFunc({balance : 'err'});
 								}
 
-								
-								
 							}
 						});
 						

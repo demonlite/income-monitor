@@ -83,7 +83,7 @@ engine['vktarget'] = {
 									}
 									
 									if (json.balance !== undefined) {
-										calbackFunc({'balance' : json.balance});
+										calbackFunc({'balance' : json.balance, 'month' : 'n/a', 'yesterday' : 'n/a', 'today' : 'n/a'});
 									}
 									
 									

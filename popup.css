@@ -175,6 +175,7 @@ td[data-role]:after {
 	position: absolute;
 	bottom: 0;
 	right: 0;
+	left: 0;
 }
 
 .opt-panel a {
@@ -189,7 +190,11 @@ td[data-role]:after {
     text-decoration: underline;
 }
 
-
+.exchrate {
+    float: left;
+    margin: 2px 6px 0;
+    font-size: 12px;
+}
 
 #add, #add_site, #settings, #about {
 	display : none;
