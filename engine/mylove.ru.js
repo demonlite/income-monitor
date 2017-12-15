@@ -9,21 +9,7 @@ engine['mylove'] = {
 	'getBalance' 	: function(calbackFunc, login, pass) {
 		
 		
-		myRequest({
-			type: "GET",
-			url : 'https://partner.mylove.ru/',
-			success: function(html){
-				
-				
- 				var parser = new DOMParser;
-				var tmpDom = parser.parseFromString(html, "text/html");
-				
-				var randr =  tmpDom.querySelector('input[name="muid"]');
-				if (randr) {
-					randr = randr.value;
-				} else {
-					console.log('input[name="muid"] not found. Try without him');
-				}
+
 
 				
 				// Request 2
@@ -35,7 +21,6 @@ engine['mylove'] = {
 						'Origin' : 'https://partner.mylove.ru'
 					},
 					data: {
-						'muid':randr,
 						'email':login,
 						'password':pass
 					},
@@ -47,7 +32,7 @@ engine['mylove'] = {
 						var tmpDom = parser.parseFromString(html, "text/html");
 						
 						
-						var balance = tmpDom.querySelector('#inheader > div > a:nth-child(3) > span');
+						var balance = tmpDom.querySelector('#inheader > div:nth-child(1) > a:nth-child(2) > span:nth-child(2)');
 						if (balance) {
 							balance = balance.innerText;
 						} else {
@@ -73,28 +58,28 @@ engine['mylove'] = {
 								//tmpDom2 = tmpDom;
 								var resp = {};
 								
-								var month = tmpDom.querySelector('#icontent > table > tbody > tr:nth-child(2) > td:nth-child(6)');
+								var month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(5)');
 								if (month) {
 									resp.month = parseFloat(month.innerText.clearCurrency());
 								} else {
 									console.log('error parse month');
 								}
 
-								var last_month = tmpDom.querySelector('#icontent > table > tbody > tr:nth-child(2) > td:nth-child(7)');
+								var last_month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6)');
 								if (last_month) {
 									resp.last_month = parseFloat(last_month.innerText.clearCurrency());
 								} else {
 									console.log('error parse last_month');
 								}
 
-								var today = tmpDom.querySelector('#icontent > table > tbody > tr:nth-child(2) > td:nth-child(2)');
+								var today = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)');
 								if (today) {
 									resp.today = parseFloat(today.innerText.clearCurrency());
 								} else {
 									console.log('error parse today');
 								}
 								
-								var yesterday = tmpDom.querySelector('#icontent > table > tbody > tr:nth-child(2) > td:nth-child(3)');
+								var yesterday = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3)');
 								if (yesterday) {
 									resp.yesterday = parseFloat(yesterday.innerText.clearCurrency());
 								} else {
@@ -111,9 +96,6 @@ engine['mylove'] = {
 					
 					
 				}); 
-			}
-			
-			
-		});
+
 	}
 }

@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 
 
@@ -21,7 +21,7 @@ var dataCacheTime = 15*60*1000; // Expire time of cached data - 15 minuts
 var version   = (navigator.userAgent.search(/(Firefox)/) > 0) ? browser.runtime.getManifest().version : chrome.app.getDetails().version;
 
 // DEBUG !!!
-// var dataCacheTime = 0; // Expire time of cached data
+var dataCacheTime = 0; // Expire time of cached data
 
 
 
@@ -643,11 +643,7 @@ function fillTable() {
 			
 			// MY DEBUG 
 			//if ((sites[j].sitekey !== 'loveplanet') && (sites[j].sitekey !== 'cpazilla') && (sites[j].sitekey !== 'mylove')) continue;
-			//if (sites[j].sitekey !== 'loveplanet') continue;
-			//if (sites[j].sitekey !== 'cpazilla') continue;
-			//if (sites[j].sitekey !== 'cpagetti') continue;
-			//if (sites[j].sitekey !== 'seriouspartner') continue;
-			//if (sites[j].sitekey !== 'badoo') continue;
+			//if (sites[j].sitekey !== 'mylove') continue;
 			
 			// MY DEBUG skip
 			if ('juicyads exoclick trafficshop bongacash ad1 epn adsense profitraf'.split(' ').indexOf(sites[j].sitekey) != -1)  continue;
