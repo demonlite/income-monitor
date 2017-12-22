@@ -10,8 +10,6 @@ engine['mylove'] = {
 		
 		
 
-
-				
 				// Request 2
 				myRequest({
 					type: 'POST',
@@ -45,7 +43,7 @@ engine['mylove'] = {
 						
 						// Request 3
 						myRequest({
-							type: "GET",
+							type: 'GET',
 							url : 'https://partner.mylove.ru/stat/total',
 							dataType: 'html',
 							success: function(html){
@@ -56,21 +54,15 @@ engine['mylove'] = {
 								var tmpDom = parser.parseFromString(html, "text/html");
 								
 								//tmpDom2 = tmpDom;
-								var resp = {};
-								
-								var month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(5)');
+								var resp = {'tip' : ''};
+	
+								var month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6)');
 								if (month) {
 									resp.month = parseFloat(month.innerText.clearCurrency());
 								} else {
 									console.log('error parse month');
 								}
 
-								var last_month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6)');
-								if (last_month) {
-									resp.last_month = parseFloat(last_month.innerText.clearCurrency());
-								} else {
-									console.log('error parse last_month');
-								}
 
 								var today = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)');
 								if (today) {
@@ -78,6 +70,40 @@ engine['mylove'] = {
 								} else {
 									console.log('error parse today');
 								}
+								
+								
+								// prepare tip
+								var today_profiles = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2)');
+								if (today_profiles) {
+									resp.tip += 'Сегодня анкет: ' + today_profiles.innerText + ' \n';
+								} else {
+									console.log('error parse today_profiles');
+								}
+								
+								var yesterday_profiles = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3)');
+								if (yesterday_profiles) {
+									resp.tip += 'Вчера анкет: ' + yesterday_profiles.innerText + ' \n';
+								} else {
+									console.log('error parse yesterday_profiles');
+								}
+								
+								var last_month = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(7)');
+								if (last_month) {
+									resp.last_month = parseFloat(last_month.innerText.clearCurrency());
+									resp.tip += 'Прошлый месяц: ' + resp.last_month + 'р\n' ;
+								} else {
+									console.log('error parse last_month');
+								}
+								
+								var last_week = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6)');
+								if (last_week) {
+									resp.last_week = parseFloat(last_week.innerText.clearCurrency());
+									resp.tip += 'Прошлая неделя: ' + resp.last_week + 'р\n';
+								} else {
+									console.log('error parse last_week');
+								}
+								
+								
 								
 								var yesterday = tmpDom.querySelector('.ptable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3)');
 								if (yesterday) {

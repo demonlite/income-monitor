@@ -132,3 +132,7 @@
 	opacity: .7;
 	display: none;
 }
+
+.dark-tooltip > div {
+    white-space: pre-line;
+}

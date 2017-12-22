@@ -423,6 +423,20 @@ function fillTable() {
 			result.balance   = 'err'
 		}
 		
+		// add a tooltip for site, if set
+		if (result.tip) {
+			var el = document.querySelector('tr[data-key="'+sitekey+'"][data-login="'+login+'"] > td.site');
+			if (el) {
+				el.setAttribute('data-tooltip', result.tip);
+
+				$(el).darkTooltip({
+					animation: 'flipIn',
+					gravity: 'adaptive',
+					theme: 'my',
+				});
+			}
+		}
+		
 		
 		
 		// prepare tableBuffer
